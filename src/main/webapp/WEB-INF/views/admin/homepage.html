@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>签证自动化填表系统</title>
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/font-awesome.css" rel="stylesheet">
+    <link href="/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="/css/animate.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="widget style1">
+                    <div class="row">
+                        <div class="col-xs-4 text-center">
+                            <i class="fa fa-tasks fa-5x"></i>
+                        </div>
+                        <div class="col-xs-8 text-right">
+                            <span>总任务数 </span>
+                            <h2 class="font-bold" id='total'>0</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="widget style1 navy-bg">
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <i class="fa fa-hourglass-1 fa-5x"></i>
+                        </div>
+                        <div class="col-xs-8 text-right">
+                            <span>正在执行任务数</span>
+                            <h2 class="font-bold" id='process'>0</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="widget style1 lazur-bg">
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <i class="fa fa-database fa-5x"></i>
+                        </div>
+                        <div class="col-xs-8 text-right">
+                            <span>已完成任务数 </span>
+                            <h2 class="font-bold" id='finish'>0</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="widget style1 yellow-bg">
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <i class="fa fa-exclamation-circle fa-5x"></i>
+                        </div>
+                        <div class="col-xs-8 text-right">
+                            <span>执行失败任务数</span>
+                            <h2 class="font-bold" id='fail'>0</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 全局js -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery-ui-1.10.4.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <!-- 自定义js -->
+    <script src="/js/content.js"></script>
+    <script>
+    var total = 0;
+    var finish = 0;
+    var process = 0;
+    var fail = 0;
+	$.post("/task/getAllTask",null,function(result){
+		if(result == null || result.length == 0) return;
+		total = result.length;
+    	for(var index in result){
+    		if(result[index].status=='已完成'){
+    			finish++;
+    		} else if(result[index].status=='处理中'){
+    			process++;
+    		} else if(result[index].status=='失败'){
+    			fail++;
+    		}
+    	}
+    	$('#total').html(total);
+    	$('#finish').html(finish);
+    	$('#process').html(process);
+    	$('#fail').html(fail);
+    });
+    </script>
+</body>
+
+</html>

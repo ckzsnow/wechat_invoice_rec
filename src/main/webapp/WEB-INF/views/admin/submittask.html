@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>签证自动化填表系统</title>
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link href="/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="/css/animate.css" rel="stylesheet">
+    <!-- <link rel="stylesheet" type="text/css" href="/css/plugins/webuploader/webuploader.css">
+    <link rel="stylesheet" type="text/css" href="/css/demo/webuploader-demo.css"> -->
+    <link href="/css/style.css?v=4.1.0" rel="stylesheet">
+    <link href="/css/plugins/chosen/chosen.css" rel="stylesheet">
+    <link href="/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <link href="/css/plugins/dropzone/dropzone.css" rel="stylesheet">
+    <link href="/css/plugins/dropzone/basic.css" rel="stylesheet">
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeIn">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>选择申请国家并上传文件</h5>
+                    </div>
+                    <div class="ibox-content">
+                    	<div class="form-group">
+	                       <div class="input-group" style="width:100%;">
+	                           <select id="country_select" class="chosen-select" multiple style="width:100%;">
+	                           </select>
+	                       </div>
+	                    </div>
+                        <!-- <div class="page-container">
+                            <p>请选择上传Excel数据文件和需要的相关照片护照等图片附件</p>
+                            <div id="uploader" class="wu-example">
+                                <div class="queueList">
+                                    <div id="dndArea" class="placeholder">
+                                        <div id="filePicker"></div>
+                                    </div>
+                                </div>
+                                <div class="statusBar" style="display:none;">
+                                    <div class="progress">
+                                        <span class="text">0%</span>
+                                        <span class="percentage"></span>
+                                    </div>
+                                    <div class="info"></div>
+                                    <div class="btns">
+                                        <div id="filePicker2"></div>
+                                        <div class="uploadBtn">开始上传</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+                        <div id="my_dropzone" class="dropzone">
+                            <div class="dropzone-previews"></div>
+                            <button id="upload_files" class="btn btn-primary pull-right">提交</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- 全局js -->
+    <script src="/js/jquery.min.js?v=2.1.4"></script>
+    <script src="/js/bootstrap.min.js?v=3.3.6"></script>
+    <!-- 自定义js -->
+    <script src="/js/content.js?v=1.0.0"></script>
+    <!-- Web Uploader -->
+    <script type="text/javascript">
+        // 添加全局站点信息
+        var BASE_URL = '/js/plugins/webuploader';
+    </script>
+    <script src="/js/plugins/sweetalert/sweetalert.min.js"></script>
+    <!-- <script src="/js/plugins/webuploader/webuploader.js"></script>
+    <script src="/js/demo/webuploader-demo.js"></script> -->
+    <script src="/js/plugins/chosen/chosen.jquery.js"></script>
+    <script src="/js/demo/form-advanced-demo.js"></script>
+    <script src="/js/plugins/dropzone/dropzone.js"></script>
+    <script>
+    $.post("/getAllCountries",null,function(result){
+    	for(var index in result){
+    		$('#country_select').append("<option value='"+result[index].id+"'>"+result[index].country_name_chi+"</option>");
+    	}
+       	var config = {
+               '.chosen-select': {},
+               '.chosen-select-deselect': {
+                   allow_single_deselect: true
+               },
+               '.chosen-select-no-single': {
+                   disable_search_threshold: 10
+               },
+               '.chosen-select-no-results': {
+                   no_results_text: 'Oops, nothing found!'
+               },
+               '.chosen-select-width': {
+                   width: "95%"
+               }
+		}
+        for (var selector in config) {
+        	$(selector).chosen(config[selector]);
+		}
+		$('.chosen-container ').css("width","100%");
+    });
+    
+    var myDropzone = new Dropzone("#my_dropzone", {
+		url:'/task/uploadTaskFiles',
+		method:'post',
+        autoProcessQueue: false,
+        uploadMultiple: true,
+        parallelUploads: 100,
+        maxFiles: 100,
+        timeout:600000,
+        dictDefaultMessage:'拖动文件至此或者点击上传',
+        dictMaxFilesExceeded: "您最多只能上传1个文件！",
+        dictResponseError: '文件上传失败!',
+        dictInvalidFileType: "文件类型只能是*.jpg,*.gif,*.png,*.jpeg。",
+        dictFallbackMessage:"浏览器不受支持",
+        dictFileTooBig:"文件过大上传文件最大支持.",
+        dictRemoveLinks: "删除",
+        dictCancelUpload: "取消",
+        // Dropzone settings
+        init: function () {
+            var myDropzone = this;
+
+            this.element.querySelector("#upload_files").addEventListener("click", function (e) {
+            	e.preventDefault();
+                e.stopPropagation();
+                var selectCountry = $("#country_select").find("option:selected").val();
+            	if(selectCountry == null){
+            		swal({title:"提示信息",text:"请选择申请的国家！"});
+            	} else {
+            		myDropzone.options.params={selectCountry:selectCountry};
+            		myDropzone.processQueue();
+            	}
+            });
+            this.on("sendingmultiple", function () {});
+            this.on("successmultiple", function (files, response) {
+            	swal({
+                    title: "提示信息",
+                    text: "上传数据文件成功！",
+                    type: "success",
+                    confirmButtonText: "OK",
+                }, function () {
+                	document.location.reload(); 
+                });               	
+            });
+            this.on("errormultiple", function (files, response) {
+            	swal({title:"提示信息",text:"上传数据文件失败,原因:"+response});
+            });
+        }
+	});
+    </script>
+</body>
+
+</html>
