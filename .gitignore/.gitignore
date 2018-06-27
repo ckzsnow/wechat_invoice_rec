@@ -1,0 +1,20 @@
+#filter folders
+target/
+.settings/
+.idea/
+#filter files
+*.class
+*.apk
+.tern-project
+.project
+.classpath
+*.DS_Store
+bbzweb.iml
+/build
+cef3lib/
+lib/
+config.txt
+hs_err_*
+javacef3*
+bin/
+.fatjar
