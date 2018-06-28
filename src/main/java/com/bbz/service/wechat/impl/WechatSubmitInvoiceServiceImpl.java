@@ -31,10 +31,12 @@ public class WechatSubmitInvoiceServiceImpl implements IWechatSubmitInvoiceServi
 	private JdbcTemplate jdbcTemplate;
 	
 	@Override
-	public Map<String, String> wechatSubmitInvoice(String userId, String invoiceJsonData) {
+	public Map<String, String> wechatSubmitInvoice(String userId, String userName, String userCompanyName, String invoiceJsonData) {
 		Map<String, String> retMap = new HashMap<>();
 		JSONObject jsonObject = JSONObject.parseObject(invoiceJsonData);
 		jsonObject.put("user_id", userId);
+		jsonObject.put("user_name", userName);
+		jsonObject.put("user_company_name", userCompanyName);
 		
 		//数据库写入二维码识别基本信息
 		String fpdm = jsonObject.getString("fpdm");

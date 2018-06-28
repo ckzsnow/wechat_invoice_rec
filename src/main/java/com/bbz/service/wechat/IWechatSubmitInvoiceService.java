@@ -5,7 +5,7 @@ import java.util.Map;
 
 public interface IWechatSubmitInvoiceService {
 	
-	public Map<String, String> wechatSubmitInvoice(String userId, String invoiceJsonData);
+	public Map<String, String> wechatSubmitInvoice(String userId, String userName, String userCompanyName, String invoiceJsonData);
 	
 	public List<Map<String, Object>> wechatGetInvoice(String userId, int page, int countPerPage);
 	
