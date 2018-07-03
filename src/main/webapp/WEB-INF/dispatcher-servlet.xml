@@ -24,7 +24,7 @@
 	<mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/**/*" />
-			<bean class="com.ynr.crossdomain.CrossInterceptor" />
+			<bean class="com.bbz.crossdomain.CrossInterceptor" />
 		</mvc:interceptor>
 	</mvc:interceptors>
 
@@ -72,9 +72,6 @@
 	<mvc:resources mapping="/fonts/**" location="/WEB-INF/fonts/"/>
 	<mvc:resources mapping="/views/**" location="/WEB-INF/views/"/>
 	<mvc:resources mapping="/plugins/**" location="/WEB-INF/plugins/"/>
-		
-	<mvc:resources mapping="/files/upload/**" location="file:/ynrfiles/upload/"/>
-	<mvc:resources mapping="/files/download/**" location="file:/ynrfiles/download/"/>
 	<!-- static resources config end -->	
 
 	<!-- database config begin -->
@@ -83,7 +80,7 @@
 		<property name="driverClassName" value="com.mysql.jdbc.Driver">
 		</property>
 		<property name="url"
-			value="jdbc:mysql://139.196.40.99:3306/autofillform?useUnicode=true&amp;characterEncoding=UTF-8"></property>
+			value="jdbc:mysql://139.196.40.99:3306/wechat_invoice_rec?useUnicode=true&amp;characterEncoding=UTF-8"></property>
 		<property name="username" value="root"></property>
 		<property name="password" value="Cckzcbm110"></property>
 		<property name="maxIdle" value="30"></property>
@@ -93,9 +90,8 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 	
-	<context:component-scan base-package="com.ynr.dao" />
-	<context:component-scan base-package="com.ynr.dao.impl" />
-	<context:component-scan base-package="com.ynr.controller" />
-	<context:component-scan base-package="com.ynr.service" />
-	<context:component-scan base-package="com.ynr.service.impl" />
+	<context:component-scan base-package="com.bbz.controller.web" />
+	<context:component-scan base-package="com.bbz.controller.wechat" />
+	<context:component-scan base-package="com.bbz.service.web.impl" />
+	<context:component-scan base-package="com.bbz.service.wechat.impl" />
 </beans>
