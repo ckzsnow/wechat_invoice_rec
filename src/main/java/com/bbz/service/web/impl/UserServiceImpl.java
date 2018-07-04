@@ -1,6 +1,8 @@
 package com.bbz.service.web.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -41,6 +43,30 @@ public class UserServiceImpl implements IUserService {
 			logger.error(e.toString());
 		}
 		return accountMap;
+	}
+
+	@Override
+	public List<Map<String, Object>> getAllInvoiceByUserId(String unionId) {
+		List<Map<String, Object>> invoiceList = new ArrayList<>();
+		String sql = "select * from invoice where user_id=?";
+		try {
+			invoiceList = jdbcTemplate.queryForList(sql, unionId);
+		} catch(Exception e) {
+			logger.error(e.toString());
+		}
+		return invoiceList;
+	}
+
+	@Override
+	public Map<String, Object> getInvoiceById(String invoice_id) {
+		Map<String, Object> resMap = new HashMap<>();
+		String sql = "select * from invoice where id=?";
+		try {
+			resMap = jdbcTemplate.queryForMap(sql, invoice_id);
+		} catch (Exception e) {
+			logger.debug(e.toString());
+		}
+		return resMap;
 	}
 	
 }
