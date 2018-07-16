@@ -170,13 +170,15 @@ public class WechatController {
 		retMap.put("error_code", "10001");
 		retMap.put("error_msg", "授权时效，请重新登陆！");
 		String sessionId = (String)request.getParameter("sessionId");
+		String union_id = (String)request.getParameter("unionId");
+		String index = (String)request.getParameter("index");
 		logger.debug("getUserAccount sessionId : {}", sessionId);
 		if(sessionId != null && !sessionId.isEmpty()) {
 			HttpSession session = MySessionContext.getSession(sessionId);
 			if(session != null) {
 				String unionId = (String)session.getAttribute("user_unionId");
 				if(unionId != null && !unionId.isEmpty()) {
-					List<Map<String, Object>> invoiceList = userService.getAllInvoiceByUserId(unionId);
+					List<Map<String, Object>> invoiceList = userService.getAllInvoiceByUserId(unionId, index);
 					if(!invoiceList.isEmpty()) {
 						retMap.put("error_code", "10000");
 						retMap.put("data", invoiceList);
@@ -281,7 +283,7 @@ public class WechatController {
             }
 
             response.put("appid", WxPayConfig.appid);
-            retMap.put("date", response);
+            retMap.put("data", response);
         }catch(Exception e){
             logger.error(e.toString());
         }
