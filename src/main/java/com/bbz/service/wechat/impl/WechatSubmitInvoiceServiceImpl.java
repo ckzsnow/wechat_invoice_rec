@@ -17,12 +17,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bbz.service.wechat.IWechatSubmitInvoiceService;
 import com.bbz.utils.RedisPool;
 import redis.clients.jedis.Jedis;
 
+@Service("wechatSubmitInvoiceService")
 public class WechatSubmitInvoiceServiceImpl implements IWechatSubmitInvoiceService {
 
 	private static final Logger logger = LoggerFactory.getLogger(WechatSubmitInvoiceServiceImpl.class);

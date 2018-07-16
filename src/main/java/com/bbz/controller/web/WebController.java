@@ -26,6 +26,11 @@ public class WebController {
 	@Autowired
 	private IGenVoucherService genVoucherService;
 	
+	@RequestMapping("/")
+	public String getRootHtml() {
+		return "redirect:/views/login.html";
+	}
+	
 	@RequestMapping("/web/downloadVoucher")
 	@ResponseBody
 	public ResponseEntity<byte[]> downloadVoucher(HttpServletRequest request) {
