@@ -67,7 +67,7 @@ public class WechatSubmitInvoiceServiceImpl implements IWechatSubmitInvoiceServi
 			return retMap;
 		}
 		long invoiceId = keyHolder.getKey().longValue();
-		jsonObject.put("user_id", invoiceId);
+		jsonObject.put("invoice_id", invoiceId);
 		
 		//向redis中写入需要执行的识别任务
 		String jsonData = jsonObject.toJSONString();
