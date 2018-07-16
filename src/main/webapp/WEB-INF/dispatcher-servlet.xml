@@ -72,6 +72,7 @@
 	<mvc:resources mapping="/fonts/**" location="/WEB-INF/fonts/"/>
 	<mvc:resources mapping="/views/**" location="/WEB-INF/views/"/>
 	<mvc:resources mapping="/plugins/**" location="/WEB-INF/plugins/"/>
+	<mvc:resources mapping="/.well-known/pki-validation/**" location="/WEB-INF/sslauth/"/>
 	<!-- static resources config end -->	
 
 	<!-- database config begin -->

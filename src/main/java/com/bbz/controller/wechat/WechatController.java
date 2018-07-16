@@ -93,7 +93,7 @@ public class WechatController {
 	@ResponseBody
 	public Map<String, Object> getUserInfo(HttpServletRequest request) {
 		Map<String, Object> retMap = new HashMap<>();
-		int error_code = 0;
+		int error_code = 1;
 		String encryptedData = request.getParameter("encryptedData");
 		String iv = request.getParameter("iv");
 		String code = request.getParameter("code");
@@ -103,29 +103,19 @@ public class WechatController {
 		logger.debug("getUserInfo url : {}", url);
 		Map<Object, Object> map = WeixinTools.httpGet(url);
 		String session_key = map.get("session_key").toString();
-//		String openid = (String) map.get("openid");
 		try {
 			String result = AesCbcUtil.decrypt(encryptedData, session_key, iv, "UTF-8");
 			if (null != result && result.length() > 0) {
 				JSONObject userInfoJSON = JSONObject.fromObject(result);
-				/*Map<String, Object> userInfo = new HashMap<>();
-				userInfo.put("openId", userInfoJSON.get("openId"));
-				userInfo.put("nickName", userInfoJSON.get("nickName"));
-				userInfo.put("gender", userInfoJSON.get("gender"));
-				userInfo.put("city", userInfoJSON.get("city"));
-				userInfo.put("province", userInfoJSON.get("province"));
-				userInfo.put("country", userInfoJSON.get("country"));
-				userInfo.put("avatarUrl", userInfoJSON.get("avatarUrl"));
-				userInfo.put("unionId", userInfoJSON.get("unionId"));*/
 				logger.debug("getUserInfo user detail info : {}", userInfoJSON.toString());
 				logger.debug("getUserInfo session id : {}", request.getSession().getId());
-				request.getSession().setAttribute("user_openId", userInfoJSON.get("openId"));
-				request.getSession().setAttribute("user_unionId", userInfoJSON.get("unionId"));
 				retMap.put("openId", userInfoJSON.get("openId"));
 				retMap.put("unionId", userInfoJSON.get("unionId"));
 				if(userInfoJSON.get("unionId") != null && !((String)userInfoJSON.get("unionId")).isEmpty()) {
-					if(userService.addUser((String)userInfoJSON.get("unionId"))) {
-						error_code = 1;
+					Map<String, Object> userMap = userService.getUserByUserId((String)userInfoJSON.get("unionId"));
+					if(userMap == null || userMap.isEmpty()) {
+						userService.addUser((String)userInfoJSON.get("unionId"));
+						userService.addUnionOpendId((String)userInfoJSON.get("openId"), (String)userInfoJSON.get("unionId"));
 					}
 				}
 			} 
@@ -144,20 +134,13 @@ public class WechatController {
 	public Map<String, Object> getUserAccount(HttpServletRequest request) {
 		Map<String, Object> retMap = new HashMap<>();
 		retMap.put("error_code", "10001");
-		retMap.put("error_msg", "授权时效，请重新登陆！");
-		String sessionId = (String)request.getParameter("sessionId");
-		logger.debug("getUserAccount sessionId : {}", sessionId);
-		if(sessionId != null && !sessionId.isEmpty()) {
-			HttpSession session = MySessionContext.getSession(sessionId);
-			if(session != null) {
-				String unionId = (String)session.getAttribute("user_unionId");
-				if(unionId != null && !unionId.isEmpty()) {
-					Map<String, Object> accountMap = userService.getUserAccountByUserId(unionId);
-					if(!accountMap.isEmpty()) {
-						retMap.put("error_code", "10000");
-						retMap.put("balance", accountMap.get("balance"));
-					}
-				}
+		String unionId = (String)request.getParameter("unionId");
+		logger.debug("getUserAccount unionId : {}", unionId);
+		if(unionId != null && !unionId.isEmpty()) {
+			Map<String, Object> userMap = userService.getUserByUserId(unionId);
+			if(!userMap.isEmpty()) {
+				retMap.put("error_code", "10000");
+				retMap.put("balance", userMap.get("balance"));
 			}
 		}
 		return retMap;
@@ -169,19 +152,16 @@ public class WechatController {
 		Map<String, Object> retMap = new HashMap<>();
 		retMap.put("error_code", "10001");
 		retMap.put("error_msg", "授权时效，请重新登陆！");
-		String sessionId = (String)request.getParameter("sessionId");
-		logger.debug("getUserAccount sessionId : {}", sessionId);
-		if(sessionId != null && !sessionId.isEmpty()) {
-			HttpSession session = MySessionContext.getSession(sessionId);
-			if(session != null) {
-				String unionId = (String)session.getAttribute("user_unionId");
-				if(unionId != null && !unionId.isEmpty()) {
-					List<Map<String, Object>> invoiceList = userService.getAllInvoiceByUserId(unionId);
-					if(!invoiceList.isEmpty()) {
-						retMap.put("error_code", "10000");
-						retMap.put("data", invoiceList);
-					}
-				}
+		String unionId = request.getParameter("unionId");
+		String index = request.getParameter("index");
+		logger.debug("getUserAccount unionId : {}", unionId);
+		if(unionId != null && !unionId.isEmpty()) {
+			List<Map<String, Object>> invoiceList = userService.getAllInvoiceByUserId(unionId, index);
+			if(!invoiceList.isEmpty()) {
+				retMap.put("error_code", "10000");
+				retMap.put("data", invoiceList);
+			} else {
+				retMap.put("error_code", "10001");
 			}
 		}
 		return retMap;
@@ -192,6 +172,7 @@ public class WechatController {
 	public Map<String, Object> getInvoiceById(HttpServletRequest request) {
 		Map<String, Object> retMap = new HashMap<>();
 		String invoice_id = request.getParameter("invoiceId");
+		logger.debug("getInvoiceById invoice_id : {}", invoice_id);
 		Map<String, Object> invoiceDetail = userService.getInvoiceById(invoice_id);
 		retMap.put("detail", invoiceDetail);
 		return retMap;
@@ -202,12 +183,13 @@ public class WechatController {
 	public Map<String, Object> wxPay(HttpServletRequest request) {
 		Map<String, Object> retMap = new HashMap<>();
 		String openId = request.getParameter("openId");
+		String unionId = request.getParameter("unionId");
 		String money = request.getParameter("money");//支付金额，单位：分，这边需要转成字符串类型，否则后面的签名会失败
         try{
             //生成的随机字符串
             String nonce_str = StringUtils.getRandomStringByLength(32);
             //商品名称
-            String body = "测试商品名称";
+            String body = "发票识别";
             //获取本机的ip地址
             String spbill_create_ip = IpUtils.getIpAddr(request);
 
@@ -224,6 +206,7 @@ public class WechatController {
             packageParams.put("notify_url", WxPayConfig.notify_url);
             packageParams.put("trade_type", WxPayConfig.TRADETYPE);
             packageParams.put("openid", openId);
+            //packageParams.put("unionid", unionId);
 
             // 除去数组中的空值和签名参数
             packageParams = PayUtil.paraFilter(packageParams);
@@ -275,20 +258,21 @@ public class WechatController {
                 logger.info("=======================第二次签名：" + paySign + "=====================");
 
                 response.put("paySign", paySign);
-
+                
                 //更新订单信息
                 //业务逻辑代码
+                userService.addPayRecord(unionId, orderNo, money);
             }
 
             response.put("appid", WxPayConfig.appid);
-            retMap.put("date", response);
+            retMap.put("data", response);
         }catch(Exception e){
             logger.error(e.toString());
         }
         return retMap;
 	}
 	
-	@RequestMapping(value="/wxNotify")
+	@RequestMapping(value="/wechat/wxNotify")
     @ResponseBody
     public void wxNotify(HttpServletRequest request,HttpServletResponse response) throws Exception{
         BufferedReader br = new BufferedReader(new InputStreamReader((ServletInputStream)request.getInputStream()));
@@ -314,8 +298,9 @@ public class WechatController {
             //根据微信官网的介绍，此处不仅对回调的参数进行验签，还需要对返回的金额与系统订单的金额进行比对等
             if(sign.equals(map.get("sign"))){
                 /**此处添加自己的业务逻辑代码start**/
- 
- 
+            	logger.debug("wxNotify renturn map : {}", map.toString());
+            	userService.updatePayRecord((String)map.get("out_trade_no"), (String)map.get("transaction_id"), (String)map.get("bank_type"), (String)map.get("mch_id"));
+            	userService.updateUser((String)map.get("openid"), (String)map.get("total_fee"));
                 /**此处添加自己的业务逻辑代码end**/
                 //通知微信服务器已经支付成功
                 resXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>"
