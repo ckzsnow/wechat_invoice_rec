@@ -44,9 +44,9 @@ public class WechatController {
 	@RequestMapping("/wechat/submitInvoice")
 	@ResponseBody
 	public Map<String, String> submitInvoice(HttpServletRequest request) {
-		String userId = (String)request.getSession().getAttribute("user_id");
+		String userId = (String)request.getAttribute("user_id");
 		String userName = (String)request.getSession().getAttribute("user_name");
-		String userCompanyName = (String)request.getSession().getAttribute("user_company_name");
+		String userCompanyName = (String)request.getAttribute("user_company_name");
 		String invoiceJsonData = request.getParameter("invoice_json_data");
 		Map<String, String> retMap = wechatSubmitInvoiceService.wechatSubmitInvoice(userId, userName, userCompanyName, invoiceJsonData);
 		logger.debug("submitInvoice, ret:{}", retMap.toString());

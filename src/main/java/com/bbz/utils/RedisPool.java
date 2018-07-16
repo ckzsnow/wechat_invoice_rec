@@ -15,7 +15,7 @@ public class RedisPool {
 		config.setMaxWaitMillis(10000);
 		config.setTestOnBorrow(true);
 		config.setTestOnReturn(true);
-		pool = new JedisPool(config,"139.196.40.99",6379,10000,"ckzcbm110");
+		pool = new JedisPool(config,"127.0.0.1",6379,10000,"ckzcbm110");
 	}
 
 	public static void main(String[] args){
