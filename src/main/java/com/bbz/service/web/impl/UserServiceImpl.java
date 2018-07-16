@@ -129,5 +129,17 @@ public class UserServiceImpl implements IUserService {
 		}
 		return retMap;
 	}
+
+	@Override
+	public boolean updateUserInfo(String unionId, String user_name, String user_company_name) {
+		String sql = "update user set user_name=?, user_company_name=? where user_id=?";
+		int affectedRows = 0;
+		try {
+			affectedRows = jdbcTemplate.update(sql, user_name, user_company_name, unionId);
+		} catch (Exception e) {
+			logger.debug(e.toString());
+		}
+		return affectedRows != 0;
+	}
 	
 }

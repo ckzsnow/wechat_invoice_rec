@@ -22,4 +22,6 @@ public interface IUserService {
 	public boolean addUnionOpendId(String openId, String unionId);
 
 	public Map<String, Object> getUserByUserId(String user_id);
+
+	public boolean updateUserInfo(String unionId, String user_name, String user_company_name);
 }

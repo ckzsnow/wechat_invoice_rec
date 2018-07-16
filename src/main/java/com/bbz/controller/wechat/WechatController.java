@@ -139,6 +139,8 @@ public class WechatController {
 			if(!userMap.isEmpty()) {
 				retMap.put("error_code", "10000");
 				retMap.put("balance", userMap.get("balance"));
+				retMap.put("user_name", userMap.get("user_name"));
+				retMap.put("user_company_name", userMap.get("user_company_name"));
 			}
 		}
 		return retMap;
@@ -318,5 +320,20 @@ public class WechatController {
         out.flush();
         out.close();
     }
+	
+	@RequestMapping("/wechat/updateUserInfo")
+	@ResponseBody
+	public Map<String, Object> updateUserInfo(HttpServletRequest request) {
+		Map<String, Object> retMap = new HashMap<>();
+		String user_name = request.getParameter("user_name");
+		String user_company_name = request.getParameter("user_company_name");
+		String unionId = request.getParameter("union_id");
+		if(userService.updateUserInfo(unionId, user_name, user_company_name)) {
+			retMap.put("error_code", 10000);
+		} else {
+			retMap.put("error_code", 10001);
+		}
+		return retMap;
+	}
 	
 }
