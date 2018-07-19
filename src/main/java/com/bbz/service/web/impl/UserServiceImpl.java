@@ -27,7 +27,7 @@ public class UserServiceImpl implements IUserService {
 		int affectedRows = 0;
 		String sql = "replace into user set user_id=?, balance=?, create_time=?";
 		try {
-			affectedRows = jdbcTemplate.update(sql, unionId, 0, new Timestamp(System.currentTimeMillis()));
+			affectedRows = jdbcTemplate.update(sql, unionId, 0.5, new Timestamp(System.currentTimeMillis()));
 		} catch(Exception e) {
 			logger.error(e.toString());
 		}

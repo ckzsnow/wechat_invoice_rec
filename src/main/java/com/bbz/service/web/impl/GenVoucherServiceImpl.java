@@ -33,12 +33,18 @@ public class GenVoucherServiceImpl implements IGenVoucherService {
 		Map<String, String> retMap = new HashMap<>();
 		List<Map<String, Object>> voucherDataList = new ArrayList<>();
 		List<Map<String, Object>> invoiceDataList = new ArrayList<>();
+		List<Map<String, Object>> faDepreciationDataList = new ArrayList<>();
 		Map<Integer, Object> invoiceOutputToExcelMap = new HashMap<>();
 		String sqlVoucher = "select * from voucher where user_id=? and bill_date=?";
+		String sqlFaDepreciation = "select * from fa_depreciation where user_id=? and bill_date=? and net_value>0";
 		String sqlInvoice = "select * from invoice left join invoice_item on invoice_item.invoice_id=invoice.id where invoice.user_id=? and invoice.bill_date=?";
+		String sqlvoucherNumMax = "select max(voucher_num) max_voucher_num from voucher where bill_date=?";
+		int voucherNumMax = 0;
 		try{
 			voucherDataList = jdbcTemplate.queryForList(sqlVoucher, userId, billDate);
 			invoiceDataList = jdbcTemplate.queryForList(sqlInvoice, userId, billDate);
+			faDepreciationDataList = jdbcTemplate.queryForList(sqlFaDepreciation, userId, billDate);
+			voucherNumMax = jdbcTemplate.queryForObject(sqlvoucherNumMax, new Object[]{billDate}, Integer.class);
 			
 			//由invoice和invoice_item的级联结果进行合并摘要，生成invoiceOutputToExcelMap
 			//key是invoice的ID,value是对应票据的详细信息，多个摘要会合并成一个摘要，因此
@@ -125,6 +131,51 @@ public class GenVoucherServiceImpl implements IGenVoucherService {
 					invoiceSheet.setColumnWidth(colIndex, colValue.getBytes().length*256);
 				}
 				rowIndex++;
+			}
+			for(Map<String, Object> faDepreciationEntry : faDepreciationDataList){
+				row = voucherSheet.createRow(rowIndex);
+				Map<String, String> infoMap = new HashMap<>();
+				String[] billDateInfos = billDate.split("-");
+				String abstractInfo = billDateInfos[0] + "年" + billDateInfos[1] + "月" + (String)faDepreciationEntry.get("abstract_info") + "折旧";
+				infoMap.put("bill_date", billDate);
+				infoMap.put("voucher_type", "转账凭证");
+				infoMap.put("voucher_num", String.valueOf(voucherNumMax+1));
+				infoMap.put("voucher_attachment_count", "1");
+				infoMap.put("abstract_info", abstractInfo);
+				infoMap.put("debit_amount", String.valueOf(faDepreciationEntry.get("monthly_depreciation")));
+				infoMap.put("account_title_code", "560212");
+				infoMap.put("account_title_name", "折旧");
+				infoMap.put("producer_name", userName);
+				infoMap.put("supply_name", (String)faDepreciationEntry.get("supply_name"));
+				for(int colIndex = 0; colIndex<ExcelTitleUtil.voucherExcelDataMap.size(); colIndex++){
+					HSSFCell cell = row.createCell(colIndex);
+					cell.setCellType(HSSFCell.CELL_TYPE_STRING);
+					String colValue = "";
+					if(infoMap.containsKey(ExcelTitleUtil.voucherExcelDataMap.get(colIndex))){
+						colValue = String.valueOf(infoMap.get(ExcelTitleUtil.voucherExcelDataMap.get(colIndex)));
+					}
+					if(!isDetail && ("supply_name").equals(ExcelTitleUtil.voucherExcelDataMap.get(colIndex))) colValue = "";
+					cell.setCellValue(colValue);
+					invoiceSheet.setColumnWidth(colIndex, colValue.getBytes().length*256);
+				}
+				infoMap.remove("debit_amount");
+				infoMap.put("lender_amount", String.valueOf(faDepreciationEntry.get("monthly_depreciation")));
+				infoMap.put("account_title_code", "1602");
+				infoMap.put("account_title_name", "累计折旧");
+				rowIndex++;
+				for(int colIndex = 0; colIndex<ExcelTitleUtil.voucherExcelDataMap.size(); colIndex++){
+					HSSFCell cell = row.createCell(colIndex);
+					cell.setCellType(HSSFCell.CELL_TYPE_STRING);
+					String colValue = "";
+					if(infoMap.containsKey(ExcelTitleUtil.voucherExcelDataMap.get(colIndex))){
+						colValue = String.valueOf(infoMap.get(ExcelTitleUtil.voucherExcelDataMap.get(colIndex)));
+					}
+					if(!isDetail && ("supply_name").equals(ExcelTitleUtil.voucherExcelDataMap.get(colIndex))) colValue = "";
+					cell.setCellValue(colValue);
+					invoiceSheet.setColumnWidth(colIndex, colValue.getBytes().length*256);
+				}
+				rowIndex++;
+				voucherNumMax++;
 			}
 			
 			//将生成的excel保存至硬盘

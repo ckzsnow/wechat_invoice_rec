@@ -33,12 +33,14 @@ public class WechatSubmitInvoiceServiceImpl implements IWechatSubmitInvoiceServi
 	private JdbcTemplate jdbcTemplate;
 	
 	@Override
-	public Map<String, String> wechatSubmitInvoice(String userId, String userName, String userCompanyName, String invoiceJsonData) {
+	public Map<String, String> wechatSubmitInvoice(String userId, String userName, String userCompanyName, String billDate, int isFa, String invoiceJsonData) {
 		Map<String, String> retMap = new HashMap<>();
 		JSONObject jsonObject = JSONObject.parseObject(invoiceJsonData);
 		jsonObject.put("user_id", userId);
 		jsonObject.put("user_name", userName);
 		jsonObject.put("user_company_name", userCompanyName);
+		jsonObject.put("bill_date", billDate);
+		jsonObject.put("is_fa", isFa);
 		
 		//数据库写入二维码识别基本信息
 		String fpdm = jsonObject.getString("fpdm");
@@ -46,11 +48,12 @@ public class WechatSubmitInvoiceServiceImpl implements IWechatSubmitInvoiceServi
 		String kprq = jsonObject.getString("kprq");
 		String kpje = jsonObject.getString("kpje");
 		String jym = jsonObject.getString("jym");
+		String kjqj = jsonObject.getString("bill_date");
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		try{
 			jdbcTemplate.update(new PreparedStatementCreator() {  
 		        public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {  
-		        	String sql = "insert into invoice(user_id, fpdm, fphm, kprq, jym, kpje, create_time) values (?,?,?,?,?,?,?)";
+		        	String sql = "insert into invoice(user_id, fpdm, fphm, kprq, jym, kpje, is_fa, bill_date, create_time) values (?,?,?,?,?,?,?,?,?)";
 		               PreparedStatement ps = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);  
 		               ps.setString(1, userId);  
 		               ps.setString(2, fpdm);
@@ -58,7 +61,9 @@ public class WechatSubmitInvoiceServiceImpl implements IWechatSubmitInvoiceServi
 		               ps.setString(4, kprq);
 		               ps.setString(5, jym);
 		               ps.setString(6, kpje);
-		               ps.setTimestamp(7, new Timestamp(System.currentTimeMillis()));
+		               ps.setInt(7, isFa);
+		               ps.setString(8, kjqj);
+		               ps.setTimestamp(9, new Timestamp(System.currentTimeMillis()));
 		               return ps;  
 		        }  
 		    }, keyHolder);
@@ -69,7 +74,7 @@ public class WechatSubmitInvoiceServiceImpl implements IWechatSubmitInvoiceServi
 			return retMap;
 		}
 		long invoiceId = keyHolder.getKey().longValue();
-		jsonObject.put("user_id", invoiceId);
+		jsonObject.put("invoice_id", invoiceId);
 		
 		//向redis中写入需要执行的识别任务
 		String jsonData = jsonObject.toJSONString();
