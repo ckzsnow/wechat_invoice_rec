@@ -1,7 +1,10 @@
 package com.bbz.service.web.impl;
 
 import java.io.FileOutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -133,6 +136,10 @@ public class GenVoucherServiceImpl implements IGenVoucherService {
 				rowIndex++;
 			}
 			for(Map<String, Object> faDepreciationEntry : faDepreciationDataList){
+				int cumulative_amortization_months = (Integer)faDepreciationEntry.get("cumulative_amortization_months");
+				int curMonths = getMonths(billDate);
+				if(curMonths == 0) continue;
+				if(curMonths > cumulative_amortization_months) continue;
 				row = voucherSheet.createRow(rowIndex);
 				Map<String, String> infoMap = new HashMap<>();
 				String[] billDateInfos = billDate.split("-");
@@ -193,5 +200,18 @@ public class GenVoucherServiceImpl implements IGenVoucherService {
 			retMap.put("error_msg", "获取凭证失败。");
 		}
 		return retMap;
+	}
+	
+	private int getMonths(String billDate){
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+		Calendar cal1 = Calendar.getInstance();
+		Calendar cal2 = Calendar.getInstance();
+		try {
+			cal1.setTime(sdf.parse(billDate));
+			return ((cal2.get(1)-cal1.get(1))*12+(cal2.get(2)-cal1.get(2)));
+		} catch (ParseException e) {
+			logger.error(e.toString());
+			return 0;
+		}
 	}
 }
