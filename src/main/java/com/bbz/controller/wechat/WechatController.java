@@ -156,9 +156,10 @@ public class WechatController {
 		retMap.put("error_msg", "授权时效，请重新登陆！");
 		String unionId = request.getParameter("unionId");
 		String index = request.getParameter("index");
+		String date = request.getParameter("date");
 		logger.debug("getUserAccount unionId : {}", unionId);
 		if(unionId != null && !unionId.isEmpty()) {
-			List<Map<String, Object>> invoiceList = userService.getAllInvoiceByUserId(unionId, index);
+			List<Map<String, Object>> invoiceList = userService.getAllInvoiceByUserId(unionId, index, date);
 			if(!invoiceList.isEmpty()) {
 				retMap.put("error_code", "10000");
 				retMap.put("data", invoiceList);
