@@ -141,5 +141,17 @@ public class UserServiceImpl implements IUserService {
 		}
 		return affectedRows != 0;
 	}
+
+	@Override
+	public boolean deduct(String unionId) {
+		String sql = "update user set balance=(balance-0.1) where user_id=?";
+		int affectedRows = 0;
+		try {
+			affectedRows = jdbcTemplate.update(sql, unionId);
+		} catch (Exception e) {
+			logger.debug(e.toString());
+		}
+		return affectedRows != 0;
+	}
 	
 }
