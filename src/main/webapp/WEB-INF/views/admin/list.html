@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="renderer" content="webkit">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+	<title>帮帮账智能票据</title>
+	<link href="https://res.wx.qq.com/mpres/htmledition/images/favicon3a7b38.ico" rel="Shortcut Icon">
+	<link rel="stylesheet" type="text/css" href="base_list.css"/>
+	<link rel="stylesheet" type="text/css" href="list.css"/>
+	<link rel="stylesheet" type="text/css" href="user.css"/>
+	<link rel="stylesheet" type="text/css" href="pagnav.css"/>
+	<link rel="stylesheet" type="text/css" href="manage.css"/>
+	<link rel="stylesheet" type="text/css" href="manage.css"/>
+	<link type="text/css" href="jquery.datetimepicker.css" rel="stylesheet" />
+	<script type="text/javascript" src="jquery.js"></script> 
+	<script type ="text/javascript" src="jquery.datetimepicker.js"></script>
+	</head>
+	<body class="zh_CN weui-desktop-page_base ">
+		<div class="mp-head" id="header">
+			<div id="mp_header" class="weui-desktop-head" style="width:100%;height:80px;position:fixed;top:0;left:0;z-index:9999;">
+				<div class="weui-desktop-head__inner">
+					<div class="weui-desktop-layout">
+						<div class="weui-desktop-layout__side">
+							<h1 class="weui-desktop-logo">
+								<a href="/" title="微信公众平台"></a>
+							</h1>
+						</div>
+						<div id="mp_header_account" class="weui-desktop-layout__extra" style="visibility: visible;">
+							<div class="weui-desktop-account">
+								<div
+									class="weui-desktop-operation-group weui-desktop-account__opr weui-desktop-operation-group_hover weui-desktop-operation_default">
+									<span class="weui-desktop-operation-group_default">
+										<div class="weui-desktop-account__info">
+											<a href="#" class="weui-desktop-account__nickname weui-desktop__small-screen-hide">上海元升帮帮账</a>
+											<a href="#" class="weui-desktop-account__type weui-desktop__small-screen-hide">李奔</a>
+										</div>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="body" class="mp-body" style="margin-top:80px;min-width:1200px;">
+			<div id="js_container_box" class="weui-desktop-layout weui-desktop-layout_global">
+				<div id="js_mp_sidemenu" class="weui-desktop-layout__side">
+					<ul class="weui-desktop-menu weui-desktop-menu_global" id="menuBar">
+						<style>
+						.weui-desktop-menu_home>.weui-desktop-menu__link .weui-desktop-menu__name:before
+						{
+							background:
+							url(menu_home.svg)
+							no-repeat;
+						}
+						.weui-desktop-menu_home>.weui-desktop-menu__link_current .weui-desktop-menu__name:before
+						{
+							background:
+							url(menu_home_current.svg)
+							no-repeat;
+						}
+						</style>
+						<li class="weui-desktop-menu__item weui-desktop-menu_home">
+							<a title="首页" class="weui-desktop-menu__link" href="home.html">
+								<span class="weui-desktop-menu__link__inner">
+									<span class="weui-desktop-menu__name">首页</span>
+								</span>
+							</a>
+							<ul class="weui-desktop-sub-menu"></ul>
+						</li>
+						<style>
+						.weui-desktop-menu_function>.weui-desktop-menu__link .weui-desktop-menu__name:before
+						{
+							background:
+							url(menu_function.svg)
+							no-repeat;
+						}
+						.weui-desktop-menu_function>.weui-desktop-menu__link_current .weui-desktop-menu__name:before
+						{
+							background:
+							url(menu_function_current.svg)
+							no-repeat;
+						}
+						.ico-load{display:inline-block;width:18px;height:18px;margin:-1px 5px 0 0;*margin-top:3px;line-height:100px;vertical-align:middle;overflow:hidden;}
+						.ico-load.white{background:url("loading_18_green.gif") no-repeat;}
+						.ico-load.hide{display:none;}
+						</style>
+						<li class="weui-desktop-menu__item weui-desktop-menu_function">
+							<span title="功能" class="weui-desktop-menu__link">
+								<span class="weui-desktop-menu__link__inner">
+									<span class="weui-desktop-menu__name">功能</span>
+								</span>
+							</span>
+							<ul class="weui-desktop-sub-menu">
+								<li class="weui-desktop-sub-menu__item">
+								<a title="自动回复" class="weui-desktop-menu__link weui-desktop-menu__link_current " data-id="10006" href="#">
+									<span class="weui-desktop-menu__link__inner">
+										<span class="weui-desktop-menu__name">发票记录</span>
+									</span>
+								</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+				<div id="js_mp_main_content" class="weui-desktop-layout__main">
+					<div class="weui-desktop-layout__main__area">
+						<div class="weui-desktop-layout__main__inner">
+							<div class="weui-desktop-layout__main__hd">
+								<h2>发票记录管理</h2>
+								<div class="title_tab">
+									<ul class="tab_navs title_tab">
+										<li class="tab_nav first js_top selected"><a
+											href="javascript:;" id="reloadTop">发票列表</a></li>
+									</ul>
+								</div>
+							</div>
+							<div class="weui-desktop-layout__main__bd weui-desktop-panel main_bd">
+								<div class="global_mod user_global_opr float_layout">
+									<div class="global_info">
+										<div class="search_bar" id="searchBar">
+										<span class="frm_input_box search with_del append ">
+											会计期间:&emsp;<input type="text" value="2018-07" id="form_datetime" style="border: 0px;outline:none;cursor: pointer;">
+										</span>
+										</div>
+									</div>
+									<div class="global_extra">
+										<a id="export_a" href="javascript:export_loading();" class="btn btn_primary btn_add"><i id="loading_img" class="ico-load white hide"></i>导出凭证Excel</a>
+									</div>
+								</div>
+								<div class="inner_container_box side_r cell_layout">
+									<div class="inner_main">
+										<div class="bd">
+											<div class="table_wrp user_list">
+												<table class="table" cellspacing="0">
+													<thead class="thead">
+														<tr>
+															<th class="table_cell user no_extra" colspan="2">
+																<div class="group_select">
+																	<label for="selectAll"
+																		class="group_select_label frm_checkbox_label"> <i
+																		class="icon_checkbox"></i> <input type="checkbox"
+																		class="frm_checkbox" id="selectAll"> 全选
+																	</label>
+																	<a class="btn btn_default js_tag_putOn_btn" href="javascript:openConfirmDlg();">一键删除</a>
+																</div>
+															</th>
+														</tr>
+													</thead>
+													<tbody class="tbody" id="userGroups">
+														<tr>
+															<td class="table_cell user">
+																<div class="user_info">
+																	<label for="checkoSTV_t5y7_cldzQr0gjIAQn7d-aA"
+																		class="frm_checkbox_label"><i
+																		class="icon_checkbox"></i><input
+																		class="frm_checkbox js_select" type="checkbox"
+																		value="oSTV_t5y7_cldzQr0gjIAQn7d-aA"
+																		id="checkoSTV_t5y7_cldzQr0gjIAQn7d-aA">
+																	</label>
+																	<a href="javascript:opendlg('111');">
+																	<span class="remark_name">供应方名称:上海狂风科技有限公司</span>
+																	<span class="avatar">
+																		<img src="invoice01.jpg" data-id="oSTV_t4DEXmGjf7lJbFQ2xfMDDZQ" class="js_msgSenderAvatar">
+																	</span>
+																	<div class="js_tags user_tag_area">
+																		<span class="js_tags_list user_tag_list">合计金额:&emsp;102933.78元</span>
+																	</div>
+																	<div class="js_tags user_tag_area">
+																		<span class="js_tags_list user_tag_list">合计税额:&emsp;2563.25元</span>
+																	</div>
+																	<div class="js_tags user_tag_area">
+																		<span class="js_tags_list user_tag_list">开票日期:&emsp;2018年7月14日</span>
+																	</div>
+																	</a>
+																</div>
+															</td>
+															<td class="table_cell user_opr tr" style="text-align:right;">
+																<a class="btn remark js_msgSenderRemark" data-fakeid="oSTV_t9-tNksUT_78czxDstmXXNc">删除</a>
+															</td>
+														</tr>
+														<tr>
+															<td class="table_cell user">
+																<div class="user_info">
+																	<label for="checkoSTV_t5y7_cldzQr0gjIAQn7d-aA"
+																		class="frm_checkbox_label selected"><i
+																		class="icon_checkbox"></i><input
+																		class="frm_checkbox js_select" type="checkbox"
+																		value="oSTV_t5y7_cldzQr0gjIAQn7d-aA"
+																		id="checkoSTV_t5y7_cldzQr0gjIAQn7d-aA">
+																	</label>
+																	<a href="javascript:opendlg('111');">
+																	<span class="remark_name">供应方名称:上海狂风科技有限公司</span>
+																	<span class="avatar">
+																		<img src="invoice01.jpg" data-id="oSTV_t4DEXmGjf7lJbFQ2xfMDDZQ" class="js_msgSenderAvatar">
+																	</span>
+																	<div class="js_tags user_tag_area">
+																		<span class="js_tags_list user_tag_list">合计金额:&emsp;102933.78元</span>
+																	</div>
+																	<div class="js_tags user_tag_area">
+																		<span class="js_tags_list user_tag_list">合计税额:&emsp;2563.25元</span>
+																	</div>
+																	<div class="js_tags user_tag_area">
+																		<span class="js_tags_list user_tag_list">开票日期:&emsp;2018年7月14日</span>
+																	</div>
+																	</a>
+																</div>
+															</td>
+															<td class="table_cell user_opr tr" style="text-align:right;">
+																<a class="btn remark js_msgSenderRemark" data-fakeid="oSTV_t9-tNksUT_78czxDstmXXNc">删除</a>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+												<p class="no_result" style="display: none;"></p>
+											</div>
+											<div class="tool_area">
+												<div class="pagination_wrp js_pageNavigator">
+													<div class="pagination" id="wxPagebar_1532066943311">
+														<span class="page_nav_area"> <a
+															href="javascript:void(0);" class="btn page_first"
+															style="display: none;"></a> <a href="javascript:void(0);"
+															class="btn page_prev" style="display: none;"><i
+																class="arrow"></i></a> <span class="page_num"> <label>1</label>
+																<span class="num_gap">/</span> <label>1</label>
+														</span> <a href="javascript:void(0);" class="btn page_next"><i
+																class="arrow"></i></a> <a href="javascript:void(0);"
+															class="btn page_last" style="display: none;"></a>
+														</span> <span class="goto_area"> <input type="text"> <a
+															href="javascript:void(0);" class="btn page_go">跳转</a>
+														</span>
+
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="item_detail" class="dialog_wrp dialog_weapplink_wrp ui-draggable" style="display:none;z-index:999999999;">
+			<div class="dialog">
+				<div class="dialog_hd">
+					<h3>发票详情</h3>
+					<button onclick="javascript:closedlg();"
+						class="weui-desktop-icon-btn weui-desktop-dialog__close-btn pop_closed">
+						<svg width="18" height="18" viewBox="0 0 18 18"
+							xmlns="http://www.w3.org/2000/svg">
+							<title>关闭</title><path
+								d="M10.01 8.996l7.922-7.922c.086-.086.085-.21.008-.289l-.73-.73c-.075-.074-.208-.075-.29.007L9 7.984 1.077.062C.995-.02.863-.019.788.055l-.73.73c-.078.078-.079.203.007.29l7.922 7.92-7.922 7.922c-.086.086-.085.212-.007.29l.73.73c.075.074.207.074.29-.008l7.92-7.921 7.922 7.921c.082.082.215.082.29.008l.73-.73c.077-.078.078-.204-.008-.29l-7.921-7.921z"></path></svg>
+					</button>
+				</div>
+				<div class="dialog_bd ">
+					<div class="processor_bar_wrp js_process">
+						<ul class="weui-desktop-steps">
+						</ul>
+					</div>
+					<div id="detail_h" style="padding:20px 20px;overflow-y:scroll; color:#6c6c6c;font-size:10px;">
+						<div style="height:60px;">
+							<div style="width:50%;float:left;">
+								<p>购买方名称:&emsp;&emsp;上海元升财务咨询有限公司</p>
+								<p>纳税人识别号:&emsp;上海元升财务咨询有限公司</p>
+								<p>地址电话:&emsp;&emsp;&emsp;上海元升财务咨询有限公司</p>
+								<p>开户行及账号:&emsp;上海元升财务咨询有限公司</p>
+							</div>
+							<div style="width:50%;float:right;text-align:right;">
+								<p>销售方名称:&emsp;&emsp;上海元升财务咨询有限公司</p>
+								<p>纳税人识别号:&emsp;上海元升财务咨询有限公司</p>
+								<p>地址电话:&emsp;&emsp;&emsp;上海元升财务咨询有限公司</p>
+								<p>开户行及账号:&emsp;上海元升财务咨询有限公司</p>
+							</div>
+						</div>
+						<div>
+							<table style="width:100%;text-align:center;margin-top:20px;" border="1">
+							  <tr>
+								<th>货物或应税劳务、服务名称</th>
+								<th>规格型号</th>
+								<th>单位</th>
+								<th>数量</th>
+								<th>单价</th>
+								<th>金额</th>
+								<th>税率</th>
+								<th>税额</th>
+							  </tr>
+							  <tr>
+								<td>技术服务费</td>
+								<td>次数</td>
+								<td>次</td>
+								<td>1</td>
+								<td>10000.88</td>
+								<td>10000.00</td>
+								<td>6%</td>
+								<td>600</td>
+							  </tr>
+							</table>
+						</div>
+						<div style="height:60px;margin-top:20px;">
+							<div style="width:50%;float:left;">
+								<p>发票代码:&emsp;4000701222</p>
+								<p>发票号码:&emsp;3680997</p>
+							</div>
+							<div style="width:50%;float:right;text-align:right;">
+								<p>开票日期:&emsp;2018年06月14日</p>
+								<p>上传时间:&emsp;2018年06月14日</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<div id="confirm_dlg" class="dialog_wrp dialog_weapplink_wrp ui-draggable" style="display:none;z-index:999999999;">
+			<div class="dialog">
+				<div class="dialog_hd">
+					<h3>提示信息</h3>
+					<button onclick="javascript:closedlg();"
+						class="weui-desktop-icon-btn weui-desktop-dialog__close-btn pop_closed">
+						<svg width="18" height="18" viewBox="0 0 18 18"
+							xmlns="http://www.w3.org/2000/svg">
+							<title>关闭</title><path
+								d="M10.01 8.996l7.922-7.922c.086-.086.085-.21.008-.289l-.73-.73c-.075-.074-.208-.075-.29.007L9 7.984 1.077.062C.995-.02.863-.019.788.055l-.73.73c-.078.078-.079.203.007.29l7.922 7.92-7.922 7.922c-.086.086-.085.212-.007.29l.73.73c.075.074.207.074.29-.008l7.92-7.921 7.922 7.921c.082.082.215.082.29.008l.73-.73c.077-.078.078-.204-.008-.29l-7.921-7.921z"></path></svg>
+					</button>
+				</div>
+				<div class="dialog_bd ">
+					<div class="processor_bar_wrp js_process">
+						<ul class="weui-desktop-steps">
+						</ul>
+					</div>
+					<div id="detail_h" style="padding:20px 20px;color:#6c6c6c;font-size:20px;">
+						<div style="height:60px;">
+							<p>您确定要删除当前记录么？</p>
+						</div>
+					</div>
+					<div class="processor_bar_wrp js_process">
+						<ul class="weui-desktop-steps">
+						</ul>
+					</div>
+					<div id="detail_h" style="padding:20px 20px;color:#6c6c6c;font-size:10px;">
+						<div style="height:30px;">
+							<div style="width:50%;float:left;">
+								<a href="javascript:;" class="user_opr btn remark">确定</a>
+							</div>
+							<div style="width:50%;float:right;text-align:right;">
+								<a href="javascript:;" class="btn btn_primary btn_add">取消</a>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<div id="dlg_mask" class="mask ui-draggable" style="z-index:99999999;display:none;">
+			<iframe frameborder="0" style="filter:progid:DXImageTransform.Microsoft.Alpha(opacity:0);position:absolute;top:0px;left:0px;width:100%;height:100%;" src="about:blank">
+			</iframe>
+		</div>
+	<script>
+		$('#form_datetime').datetimepicker({
+			minView: "month", //选择日期后，不会再跳转去选择时分秒 
+                    format: "Y-m", //选择日期后，文本框显示的日期格式 
+                    timepicker:false,
+                    autoclose: true
+		});
+		$.datetimepicker.setLocale('ch');
+		function opendlg(args){
+			var width = document.documentElement.clientWidth;
+			var height = document.documentElement.clientHeight;
+			document.getElementById("item_detail").style.width = "600px";
+			document.getElementById("item_detail").style.height = (height * 2 / 3) + "px";
+			document.getElementById("item_detail").style.top = (height/2 - (height/3)) + "px";
+			document.getElementById("item_detail").style.left = (width/2 - 300) + "px";
+			document.getElementById("detail_h").style.maxHeight = (height *2 / 3 -80) + "px";
+			document.getElementById("dlg_mask").style.display = "";
+			document.getElementById("item_detail").style.display = "";
+		}
+		function closedlg(args){
+			document.getElementById("dlg_mask").style.display = "none";
+			document.getElementById("item_detail").style.display = "none";
+			document.getElementById("confirm_dlg").style.display = "none";
+		}
+		function export_loading(){
+			console.log('1111');
+			$("#export_a").attr('href', 'javascript:;');
+			$("#loading_img").removeClass("hide");
+			setTimeout(function(){
+				$("#loading_img").addClass("hide");
+				$("#export_a").attr('href', 'javascript:export_loading();');
+			}, 4000);
+		}
+		function openConfirmDlg(){
+			var width = document.documentElement.clientWidth;
+			var height = document.documentElement.clientHeight;
+			document.getElementById("confirm_dlg").style.width = "600px";
+			document.getElementById("confirm_dlg").style.height = (height * 2 / 3) + "px";
+			document.getElementById("confirm_dlg").style.top = (height/2 - (height/3)) + "px";
+			document.getElementById("confirm_dlg").style.left = (width/2 - 300) + "px";
+			document.getElementById("dlg_mask").style.display = "";
+			document.getElementById("confirm_dlg").style.display = "";
+		}
+	</script>
+	</body>
+</html>

@@ -7,19 +7,13 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
 	<title>帮帮账智能票据</title>
 	<link href="https://res.wx.qq.com/mpres/htmledition/images/favicon3a7b38.ico" rel="Shortcut Icon">
-	<link rel="stylesheet" type="text/css" href="base_list.css"/>
-	<link rel="stylesheet" type="text/css" href="list.css"/>
-	<link rel="stylesheet" type="text/css" href="user.css"/>
-	<link rel="stylesheet" type="text/css" href="pagnav.css"/>
-	<link rel="stylesheet" type="text/css" href="manage.css"/>
-	<link rel="stylesheet" type="text/css" href="manage.css"/>
-	<link type="text/css" href="bootstrap-datetimepicker.min.css" rel="stylesheet" />
-	<script type="text/javascript" src="jquery.min.js"></script> 
-	<script type ="text/javascript" src="bootstrap-datetimepicker.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="base.css"/>
+	<link rel="stylesheet" type="text/css" href="sea.css">
+	<link rel="stylesheet" type="text/css" href="index.css">
 	</head>
 	<body class="zh_CN weui-desktop-page_base ">
 		<div class="mp-head" id="header">
-			<div id="mp_header" class="weui-desktop-head" style="width:100%;height:80px;position:fixed;top:0;left:0;z-index:9999;">
+			<div id="mp_header" class="weui-desktop-head" style="width:100%;height:80px;position:fixed;top:0;left:0;z-index:9999;min-width:1200px;">
 				<div class="weui-desktop-head__inner">
 					<div class="weui-desktop-layout">
 						<div class="weui-desktop-layout__side">
@@ -44,8 +38,8 @@
 				</div>
 			</div>
 		</div>
-		<div id="body" class="mp-body" style="margin-top:80px;">
-			<div id="js_container_box" class="weui-desktop-layout weui-desktop-layout_global">
+		<div id="body" class="mp-body" style="margin-top:80px;min-width:1200px;">
+			<div id="js_container_box" class="weui-desktop-layout weui-desktop-layout_global" style="min-width:1200px;">
 				<div id="js_mp_sidemenu" class="weui-desktop-layout__side">
 					<ul class="weui-desktop-menu weui-desktop-menu_global" id="menuBar">
 						<style>
@@ -63,7 +57,7 @@
 						}
 						</style>
 						<li class="weui-desktop-menu__item weui-desktop-menu_home">
-							<a title="首页" class="weui-desktop-menu__link" href="home.html">
+							<a title="首页" class="weui-desktop-menu__link weui-desktop-menu__link_current" href="#">
 								<span class="weui-desktop-menu__link__inner">
 									<span class="weui-desktop-menu__name">首页</span>
 								</span>
@@ -92,7 +86,7 @@
 							</span>
 							<ul class="weui-desktop-sub-menu">
 								<li class="weui-desktop-sub-menu__item">
-								<a title="自动回复" class="weui-desktop-menu__link weui-desktop-menu__link_current " data-id="10006" href="#">
+								<a title="自动回复" class="weui-desktop-menu__link " data-id="10006" href="list.html">
 									<span class="weui-desktop-menu__link__inner">
 										<span class="weui-desktop-menu__name">发票记录</span>
 									</span>
@@ -105,139 +99,43 @@
 				<div id="js_mp_main_content" class="weui-desktop-layout__main">
 					<div class="weui-desktop-layout__main__area">
 						<div class="weui-desktop-layout__main__inner">
-							<div class="weui-desktop-layout__main__hd">
-								<h2>发票记录管理</h2>
-								<div class="title_tab">
-									<ul class="tab_navs title_tab">
-										<li class="tab_nav first js_top selected"><a
-											href="javascript:;" id="reloadTop">发票列表</a></li>
-									</ul>
-								</div>
-							</div>
-							<div class="weui-desktop-layout__main__bd weui-desktop-panel main_bd">
-								<div class="global_mod user_global_opr float_layout">
-									<div class="global_info">
-										<div class="search_bar" id="searchBar"><span class="frm_input_box search with_del append ">
-										<a class="del_btn jsSearchInputClose" href="javascript:" style="display:none">
-											<i class="icon_search_del"></i>&nbsp;
-										</a>
-										<a href="javascript:" class="frm_input_append jsSearchInputBt">
-											<i class="icon16_common search_gray">搜索</i>&nbsp;
-										</a>
-										<input type="text" value="" id="form_datetime" placeholder="用户昵称">
-										</span>
+							<div id="app" style="visibility: visible;">
+								<div class="main_bd">
+									<div class="weui-desktop-panel weui-desktop-panel_overview">
+										<div class="weui-desktop-panel__hd">
+											<h3 class="weui-desktop-panel__title">帐号整体情况</h3>
 										</div>
-									</div>
-									<div class="global_extra">
-										<a href="javascript:;" data-y="3" class="btn btn_primary btn_add"
-											id="js_tag_add_btn">导出凭证Excel</a>
-									</div>
-								</div>
-								<div class="inner_container_box side_r cell_layout">
-									<div class="inner_main">
-										<div class="bd">
-											<div class="table_wrp user_list">
-												<table class="table" cellspacing="0">
-													<thead class="thead">
-														<tr>
-															<th class="table_cell user no_extra" colspan="2">
-																<div class="group_select">
-																	<label for="selectAll"
-																		class="group_select_label frm_checkbox_label"> <i
-																		class="icon_checkbox"></i> <input type="checkbox"
-																		class="frm_checkbox" id="selectAll"> 全选
-																	</label>
-																	<a class="btn btn_default btn_disabled js_tag_putOn_btn" href="javascript:;">一键删除</a>
-																</div>
-															</th>
-														</tr>
-													</thead>
-													<tbody class="tbody" id="userGroups">
-														<tr>
-															<td class="table_cell user">
-																<div class="user_info">
-																	<label for="checkoSTV_t5y7_cldzQr0gjIAQn7d-aA"
-																		class="frm_checkbox_label"><i
-																		class="icon_checkbox"></i><input
-																		class="frm_checkbox js_select" type="checkbox"
-																		value="oSTV_t5y7_cldzQr0gjIAQn7d-aA"
-																		id="checkoSTV_t5y7_cldzQr0gjIAQn7d-aA">
-																	</label>
-																	<a href="javascript:opendlg('111');">
-																	<span class="remark_name">供应方名称:上海狂风科技有限公司</span>
-																	<span class="avatar">
-																		<img src="invoice01.jpg" data-id="oSTV_t4DEXmGjf7lJbFQ2xfMDDZQ" class="js_msgSenderAvatar">
-																	</span>
-																	<div class="js_tags user_tag_area">
-																		<span class="js_tags_list user_tag_list">合计金额:&emsp;102933.78元</span>
-																	</div>
-																	<div class="js_tags user_tag_area">
-																		<span class="js_tags_list user_tag_list">合计税额:&emsp;2563.25元</span>
-																	</div>
-																	<div class="js_tags user_tag_area">
-																		<span class="js_tags_list user_tag_list">开票日期:&emsp;2018年7月14日</span>
-																	</div>
-																	</a>
-																</div>
-															</td>
-															<td class="table_cell user_opr tr" style="text-align:right;">
-																<a class="btn remark js_msgSenderRemark" data-fakeid="oSTV_t9-tNksUT_78czxDstmXXNc">删除</a>
-															</td>
-														</tr>
-														<tr>
-															<td class="table_cell user">
-																<div class="user_info">
-																	<label for="checkoSTV_t5y7_cldzQr0gjIAQn7d-aA"
-																		class="frm_checkbox_label"><i
-																		class="icon_checkbox"></i><input
-																		class="frm_checkbox js_select" type="checkbox"
-																		value="oSTV_t5y7_cldzQr0gjIAQn7d-aA"
-																		id="checkoSTV_t5y7_cldzQr0gjIAQn7d-aA">
-																	</label>
-																	<a href="javascript:opendlg('111');">
-																	<span class="remark_name">供应方名称:上海狂风科技有限公司</span>
-																	<span class="avatar">
-																		<img src="invoice01.jpg" data-id="oSTV_t4DEXmGjf7lJbFQ2xfMDDZQ" class="js_msgSenderAvatar">
-																	</span>
-																	<div class="js_tags user_tag_area">
-																		<span class="js_tags_list user_tag_list">合计金额:&emsp;102933.78元</span>
-																	</div>
-																	<div class="js_tags user_tag_area">
-																		<span class="js_tags_list user_tag_list">合计税额:&emsp;2563.25元</span>
-																	</div>
-																	<div class="js_tags user_tag_area">
-																		<span class="js_tags_list user_tag_list">开票日期:&emsp;2018年7月14日</span>
-																	</div>
-																	</a>
-																</div>
-															</td>
-															<td class="table_cell user_opr tr" style="text-align:right;">
-																<a class="btn remark js_msgSenderRemark" data-fakeid="oSTV_t9-tNksUT_78czxDstmXXNc">删除</a>
-															</td>
-														</tr>
-													</tbody>
-												</table>
-												<p class="no_result" style="display: none;"></p>
-											</div>
-											<div class="tool_area">
-												<div class="pagination_wrp js_pageNavigator">
-													<div class="pagination" id="wxPagebar_1532066943311">
-														<span class="page_nav_area"> <a
-															href="javascript:void(0);" class="btn page_first"
-															style="display: none;"></a> <a href="javascript:void(0);"
-															class="btn page_prev" style="display: none;"><i
-																class="arrow"></i></a> <span class="page_num"> <label>1</label>
-																<span class="num_gap">/</span> <label>1</label>
-														</span> <a href="javascript:void(0);" class="btn page_next"><i
-																class="arrow"></i></a> <a href="javascript:void(0);"
-															class="btn page_last" style="display: none;"></a>
-														</span> <span class="goto_area"> <input type="text"> <a
-															href="javascript:void(0);" class="btn page_go">跳转</a>
-														</span>
-
-													</div>
-												</div>
-											</div>
+										<div class="weui-desktop-panel__bd">
+											<ul
+												class="weui-desktop-data-overview-list weui-desktop-home-overview">
+												<li class="weui-desktop-data-overview"><span
+													class="weui-desktop-data-overview__title"><svg t="1532063621579" class="icon" style="" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1211" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20"><defs><style type="text/css"></style></defs><path d="M958.057333 64.612385l-164.85323 0-185.357328 249.481452c-49.432885 67.61016-79.667985 112.55149-90.7073 134.823989l-3.15566 0c-32.609691-54.160279-124.625704-182.258429-276.066827-384.305441l-174.316014 0 324.180206 406.776805L121.968801 471.38919l0 89.881061 311.559762 0 0 123.878011L121.968801 685.148261l0 91.034279 311.559762 0 0 180.341928 154.594585 0L588.123149 776.18274l300.518249 0 0-91.034279L588.125547 685.148461l0-123.878011 300.518249 0 0-89.881061L630.721467 471.38939 958.057333 64.612385z" p-id="1212" fill="#8a8a8a"></path></svg>
+														剩余金额 </span> <em class="weui-desktop-data-overview__desc"><a
+														href="#">0</a></em></li>
+												<li class="weui-desktop-data-overview"><span
+													class="weui-desktop-data-overview__title"><svg
+															width="23" height="15" viewBox="0 0 23 15"
+															xmlns="http://www.w3.org/2000/svg">
+															<path
+																d="M19.405 2.667L14 8.845l-5-3-9 8 1 1 8-7 5 3 6.505-7.318 2.279 1.78L22.488 0l-5.22.997 2.137 1.67z"></path></svg>
+														可用次数 </span> <em class="weui-desktop-data-overview__desc"><a
+														href="#">121</a></em></li>
+												<li class="weui-desktop-data-overview"><span
+													class="weui-desktop-data-overview__title"><svg t="1532063899098" class="icon" style="" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2039" xmlns:xlink="http://www.w3.org/1999/xlink" width="30" height="30"><defs><style type="text/css"></style></defs><path d="M783.431 674.42c0-12.78-10.377-23.211-23.211-23.211h-510.526c-12.78 0-23.211 10.377-23.211 23.211s10.377 23.211 23.211 23.211h255.317v46.476h-69.686c-12.78 0-23.211 10.377-23.211 23.211s10.377 23.211 23.211 23.211h92.788c12.834 0 23.265-10.377 23.265-23.211v-69.632h208.842c12.834-0.109 23.211-10.485 23.211-23.265zM760.274 279.893h-510.58c-12.78 0-23.211 10.377-23.211 23.211s10.431 23.211 23.211 23.211h162.475v46.421h-116.053c-12.834 0-23.265 10.377-23.265 23.211v92.843c0 12.78 10.377 23.211 23.265 23.211h417.683c12.78 0 23.211-10.377 23.211-23.211v-92.843c0-12.78-10.377-23.211-23.211-23.211h-116.053v-46.421h162.475c12.78 0 23.211-10.377 23.211-23.211s-10.377-23.211-23.156-23.211zM412.17 465.524h-92.843v-46.421h92.843v46.421zM551.378 465.524h-92.843v-46.421h92.843v46.421zM551.378 372.682h-92.843v-46.367h92.843v46.367zM690.588 419.103v46.476h-92.788v-46.476h92.788zM629.367 711.447c-13.545-3.769-27.415 3.168-30.748 15.401-3.441 12.452 4.861 25.395 18.514 29.218l107.643 31.894c13.599 3.769 27.307-3.168 30.748-15.51s-4.806-25.395-18.404-29.109l-107.753-31.894zM909.588 284.644c-0.109-0.054-0.109-0.054-0.109-0.109-6.281-11.087-20.371-15.073-31.567-8.793s-15.127 20.426-8.847 31.676c-0.054 0-0.054 0 0 0.054 112.395 201.141 40.851 455.202-160.126 568.033-201.25 113.050-455.913 41.615-568.962-159.69-113.104-201.141-41.615-455.913 159.58-568.962 151.333-85.033 331.94-64.389 460.772 35.936l0.765-0.928c0.054 0.054 0.054 0.054 0.054 0.109 10.158 7.81 24.63 5.899 32.549-4.15 7.919-10.212 6.007-24.685-4.096-32.549-0.382-0.382-0.928-0.437-1.201-0.71-143.033-110.265-343.354-131.345-510.799-37.41-223.477 125.665-302.94 408.562-177.329 632.204 125.502 223.423 408.508 302.831 631.985 177.275 223.533-125.556 302.777-408.508 177.329-631.985zM713.853 604.788c12.78 0 23.211-10.377 23.211-23.211s-10.377-23.265-23.211-23.265h-417.738c-12.834 0-23.265 10.377-23.265 23.265 0 12.78 10.377 23.211 23.265 23.211h417.738zM376.561 711.447l-107.643 31.894c-13.653 3.769-21.845 16.821-18.46 29.164 3.441 12.342 17.094 19.333 30.748 15.51l107.588-31.894c13.653-3.823 21.954-16.821 18.569-29.218-3.386-12.288-17.258-19.223-30.802-15.456z" p-id="2040" fill="#8a8a8a"></path></svg>
+														已上传票据总数 </span> <em class="weui-desktop-data-overview__desc"><a
+														href="#">255</a></em></li>
+											</ul>
+											<ul class="weui-desktop-list weui-desktop-home-msg">
+												<li class="weui-desktop-list__item js_orgrealnamestate"
+													style="display: none;"><strong
+													class="weui-desktop-home-msg__title">主体验证</strong> <span
+													class="weui-desktop-home-msg__desc"><span
+														class="js_orgrealnamestate_auditing">你的帐号正在进行主体身份验证 <a
+															target="_blank" href="">查看验证详情</a></span></span> <span
+													class="weui-desktop-home-msg__opr "><button
+															class="weui-desktop-btn weui-desktop-btn_primary"
+															style="display: none;">验证</button></span></li>
+											</ul>
 										</div>
 									</div>
 								</div>
@@ -247,103 +145,5 @@
 				</div>
 			</div>
 		</div>
-		<div id="item_detail" class="dialog_wrp dialog_weapplink_wrp ui-draggable" style="display:none;z-index:999999999;">
-			<div class="dialog">
-				<div class="dialog_hd">
-					<h3>发票详情</h3>
-					<button onclick="javascript:closedlg();"
-						class="weui-desktop-icon-btn weui-desktop-dialog__close-btn pop_closed">
-						<svg width="18" height="18" viewBox="0 0 18 18"
-							xmlns="http://www.w3.org/2000/svg">
-							<title>Element / Icon - Close</title><path
-								d="M10.01 8.996l7.922-7.922c.086-.086.085-.21.008-.289l-.73-.73c-.075-.074-.208-.075-.29.007L9 7.984 1.077.062C.995-.02.863-.019.788.055l-.73.73c-.078.078-.079.203.007.29l7.922 7.92-7.922 7.922c-.086.086-.085.212-.007.29l.73.73c.075.074.207.074.29-.008l7.92-7.921 7.922 7.921c.082.082.215.082.29.008l.73-.73c.077-.078.078-.204-.008-.29l-7.921-7.921z"></path></svg>
-					</button>
-				</div>
-				<div class="dialog_bd ">
-					<div class="processor_bar_wrp js_process">
-						<ul class="weui-desktop-steps">
-						</ul>
-					</div>
-					<div id="detail_h" style="padding:20px 20px;overflow-y:scroll; color:#6c6c6c;font-size:10px;">
-						<div style="height:60px;">
-							<div style="width:50%;float:left;">
-								<p>购买方名称:&emsp;&emsp;上海元升财务咨询有限公司</p>
-								<p>纳税人识别号:&emsp;上海元升财务咨询有限公司</p>
-								<p>地址电话:&emsp;&emsp;&emsp;上海元升财务咨询有限公司</p>
-								<p>开户行及账号:&emsp;上海元升财务咨询有限公司</p>
-							</div>
-							<div style="width:50%;float:right;text-align:right;">
-								<p>销售方名称:&emsp;&emsp;上海元升财务咨询有限公司</p>
-								<p>纳税人识别号:&emsp;上海元升财务咨询有限公司</p>
-								<p>地址电话:&emsp;&emsp;&emsp;上海元升财务咨询有限公司</p>
-								<p>开户行及账号:&emsp;上海元升财务咨询有限公司</p>
-							</div>
-						</div>
-						<div>
-							<table style="width:100%;text-align:center;margin-top:20px;" border="1">
-							  <tr>
-								<th>货物或应税劳务、服务名称</th>
-								<th>规格型号</th>
-								<th>单位</th>
-								<th>数量</th>
-								<th>单价</th>
-								<th>金额</th>
-								<th>税率</th>
-								<th>税额</th>
-							  </tr>
-							  <tr>
-								<td>技术服务费</td>
-								<td>次数</td>
-								<td>次</td>
-								<td>1</td>
-								<td>10000.88</td>
-								<td>10000.00</td>
-								<td>6%</td>
-								<td>600</td>
-							  </tr>
-							</table>
-						</div>
-						<div style="height:60px;margin-top:20px;">
-							<div style="width:50%;float:left;">
-								<p>发票代码:&emsp;4000701222</p>
-								<p>发票号码:&emsp;3680997</p>
-							</div>
-							<div style="width:50%;float:right;text-align:right;">
-								<p>开票日期:&emsp;2018年06月14日</p>
-								<p>上传时间:&emsp;2018年06月14日</p>
-							</div>
-						</div>
-					</div>
-				</div>
-
-			</div>
-		</div>
-		<div id="dlg_mask" class="mask ui-draggable" style="z-index:99999999;display:none;"><iframe frameborder="0" style="filter:progid:DXImageTransform.Microsoft.Alpha(opacity:0);position:absolute;top:0px;left:0px;width:100%;height:100%;" src="about:blank"></iframe></div>
-	<script>
-		$('#form_datetime').datetimepicker({
-			format: 'yyyy-mm',
-			autoclose: true,
-			todayBtn: true,
-			startView: 'year',
-			minView:'year',
-			maxView:'decade',
-			language:  'zh-CN',
-		});
-		function opendlg(args){
-			var width = document.documentElement.clientWidth;
-			var height = document.documentElement.clientHeight;
-			document.getElementById("item_detail").style.width = "600px";
-			document.getElementById("item_detail").style.height = (height * 2 / 3) + "px";
-			document.getElementById("item_detail").style.top = (height/2 - (height/3)) + "px";
-			document.getElementById("item_detail").style.left = (width/2 - 300) + "px";
-			document.getElementById("detail_h").style.maxHeight = (height *2 / 3 -80) + "px";
-			document.getElementById("dlg_mask").style.display = "";
-			document.getElementById("item_detail").style.display = "";
-		}
-		function closedlg(args){
-			document.getElementById("dlg_mask").style.display = "none";
-			document.getElementById("item_detail").style.display = "none";
-		}
-	</script>
 	</body>
 </html>
