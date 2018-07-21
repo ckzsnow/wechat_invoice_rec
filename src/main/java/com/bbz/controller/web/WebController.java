@@ -67,7 +67,7 @@ public class WebController {
 	@ResponseBody
 	public Map<String, Object> deleteInvoiceForSingle(HttpServletRequest request) {
 		long invoiceId = Long.valueOf(request.getParameter("invoice_id"));
-		//userService.deleteInvoiceForSingle(invoiceId);
+		userService.deleteInvoiceForSingle(invoiceId);
 		return null;
 	}
 	
@@ -75,7 +75,7 @@ public class WebController {
 	@ResponseBody
 	public Map<String, Object> deleteInvoiceAll(HttpServletRequest request) {
 		String invoiceIds = request.getParameter("invoice_id");
-		//userService.deleteInvoiceAll(invoiceIds);
+		userService.deleteInvoiceAll(invoiceIds);
 		return null;
 	}
 	

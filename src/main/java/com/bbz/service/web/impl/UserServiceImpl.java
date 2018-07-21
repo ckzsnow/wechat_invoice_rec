@@ -156,7 +156,7 @@ public class UserServiceImpl implements IUserService {
 
 	@Override
 	public Map<String, Object> getUserInfoForWeb(String userId) {
-		String sql = "select user.*, count(invoice.id) as total from user inner join invoice on invoice.user_id=? and user.user_id=?";
+		String sql = "select user.*, count(invoice.id) as total from user left join invoice on invoice.user_id=? and user.user_id=?";
 		Map<String, Object> retMap = new HashMap<>();
 		try {
 			retMap = jdbcTemplate.queryForMap(sql, userId, userId);
