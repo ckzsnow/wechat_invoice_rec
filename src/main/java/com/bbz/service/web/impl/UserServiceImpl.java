@@ -49,7 +49,7 @@ public class UserServiceImpl implements IUserService {
 	@Override
 	public List<Map<String, Object>> getAllInvoiceByUserId(String unionId, String index, String date) {
 		List<Map<String, Object>> invoiceList = new ArrayList<>();
-		String sql = "select * from invoice where user_id=? and bill_date=? limit 0,?";
+		String sql = "select * from invoice where user_id=? and bill_date=? and rec_status=1 order by create_time desc limit 0,?";
 		try {
 			invoiceList = jdbcTemplate.queryForList(sql, unionId, date, Integer.valueOf(index)*5);
 		} catch(Exception e) {
