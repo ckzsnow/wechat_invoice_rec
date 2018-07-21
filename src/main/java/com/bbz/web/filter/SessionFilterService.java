@@ -30,12 +30,12 @@ public class SessionFilterService extends OncePerRequestFilter {
 
 		String uri = request.getRequestURI();
 		boolean doFilter = false;
-		for (String url : filterUrls) {
+		/*for (String url : filterUrls) {
 			if (uri.indexOf(url) != -1) {
 				doFilter = true;
 				break;
 			}
-		}
+		}*/
 		if (doFilter) {
 			String userId = (String)request.getSession().getAttribute("user_id");
 			if (null == userId || userId.isEmpty()) {

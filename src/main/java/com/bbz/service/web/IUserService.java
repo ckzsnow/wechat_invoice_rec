@@ -8,10 +8,18 @@ public interface IUserService {
 	public boolean addUser(String unionId);
 
 	public Map<String, Object> getUserAccountByUserId(String unionId);
+	
+	public Map<String, Object> getUserInfoForWeb(String userId);
 
 	public List<Map<String, Object>> getAllInvoiceByUserId(String unionId, String index, String date);
+	
+	public Map<String, Object> getAllInvoiceForWeb(String userId, String billDate, int currentPage, int countPrePage);
 
 	public Map<String, Object> getInvoiceById(String invoice_id);
+	
+	public void deleteInvoiceForSingle(long invoice_id);
+	
+	public void deleteInvoiceAll(String ids);
 
 	public boolean addPayRecord(String unionId, String orderNo, String money);
 

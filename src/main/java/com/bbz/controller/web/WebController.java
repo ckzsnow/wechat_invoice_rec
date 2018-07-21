@@ -2,6 +2,7 @@ package com.bbz.controller.web;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.bbz.service.web.IGenVoucherService;
+import com.bbz.service.web.IUserService;
 
 @Controller
 public class WebController {
@@ -26,37 +28,89 @@ public class WebController {
 	@Autowired
 	private IGenVoucherService genVoucherService;
 	
+	@Autowired
+	private IUserService userService;
+	
 	@RequestMapping("/")
 	public String getRootHtml() {
-		return "redirect:/views/login.html";
+		return "redirect:/views/admin/home.html";
 	}
 	
-	@RequestMapping("/web/downloadVoucher")
+	@RequestMapping("/admin/getUserInfo")
 	@ResponseBody
-	public ResponseEntity<byte[]> downloadVoucher(HttpServletRequest request) {
+	public Map<String, Object> getUserInfo(HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute("user_id");
+		userId = "oZEuwxBPWrDkHjFL1Q8VTHv_o_II";
+		return userService.getUserInfoForWeb(userId);
+	}
+	
+	@RequestMapping("/admin/getAllInvoiceForWeb")
+	@ResponseBody
+	public Map<String, Object> getAllInvoiceForWeb(HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute("user_id");
+		String billDate = request.getParameter("bill_date");
+		String currentPage = request.getParameter("current_page");
+		String countPrePage = request.getParameter("count_pre_page");
+		int currentPage_ = 1;
+		int countPrePage_ = 5;
+		try {
+			currentPage_ = Integer.valueOf(currentPage);
+			countPrePage_ = Integer.valueOf(countPrePage);
+		} catch(Exception ex) {
+			logger.error(ex.toString());
+		}
+		userId = "oZEuwxBPWrDkHjFL1Q8VTHv_o_II";
+		return userService.getAllInvoiceForWeb(userId, billDate, currentPage_, countPrePage_);
+	}
+	
+	@RequestMapping("/admin/deleteInvoiceForSingle")
+	@ResponseBody
+	public Map<String, Object> deleteInvoiceForSingle(HttpServletRequest request) {
+		long invoiceId = Long.valueOf(request.getParameter("invoice_id"));
+		//userService.deleteInvoiceForSingle(invoiceId);
+		return null;
+	}
+	
+	@RequestMapping("/admin/deleteInvoiceAll")
+	@ResponseBody
+	public Map<String, Object> deleteInvoiceAll(HttpServletRequest request) {
+		String invoiceIds = request.getParameter("invoice_id");
+		//userService.deleteInvoiceAll(invoiceIds);
+		return null;
+	}
+	
+	@RequestMapping("/admin/downloadVoucherPath")
+	@ResponseBody
+	public Map<String, String> downloadVoucherPath(HttpServletRequest request) {
 		String userId = (String) request.getSession().getAttribute("user_id");
 		String userName = (String) request.getSession().getAttribute("user_name");
-		String billDate = (String) request.getSession().getAttribute("bill_date");
-		String isDetail = (String) request.getSession().getAttribute("is_detail");
+		userId = "oZEuwxBPWrDkHjFL1Q8VTHv_o_II";
+		userName = "测试员";
+		String billDate = request.getParameter("bill_date");
+		String isDetail = request.getParameter("is_detail");;
 		boolean isDetail_ = ("0").equals(isDetail) ? false:true;
 		logger.debug("genVoucher, bill_date:{}, isDetail:{}", billDate, isDetail);
 		Map<String, String> retMap = genVoucherService.genVoucher(userId, userName, billDate, isDetail_);
-		if(retMap.get("error_code").isEmpty()) {
-			ResponseEntity<byte[]> re = null;
-			File file = new File(retMap.get("xls_path"));
-			try {
-				HttpHeaders headers = new HttpHeaders();
-				headers.setContentDispositionFormData("attachment", new String(("凭证_" + billDate).getBytes("UTF-8"), "iso-8859-1"));
-				headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-				re = new ResponseEntity<byte[]>(
-						FileUtils.readFileToByteArray(file), headers,
-						HttpStatus.OK);
-			} catch (IOException e) {
-				logger.error("downloadVoucher exception : {}", e.toString());
-			}
-			return re;
-		} else {
-			return null;
+		return retMap;
+	}
+	
+	@RequestMapping("/admin/downloadVoucher")
+	@ResponseBody
+	public ResponseEntity<byte[]> downloadVoucher(HttpServletRequest request) {
+		ResponseEntity<byte[]> re = null;
+		String excelPath = request.getParameter("excel_path");
+		String billDate = request.getParameter("bill_date");
+		File file = new File(excelPath);
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentDispositionFormData("attachment", new String(("凭证_" + billDate + ".xls").getBytes("UTF-8"), "iso-8859-1"));
+			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+			re = new ResponseEntity<byte[]>(
+					FileUtils.readFileToByteArray(file), headers,
+					HttpStatus.OK);
+		} catch (IOException e) {
+			logger.error("downloadVoucher exception : {}", e.toString());
 		}
+		return re;
 	}
 }

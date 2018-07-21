@@ -7,15 +7,14 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
 	<title>帮帮账智能票据</title>
 	<link href="https://res.wx.qq.com/mpres/htmledition/images/favicon3a7b38.ico" rel="Shortcut Icon">
-	<link rel="stylesheet" type="text/css" href="base_list.css"/>
-	<link rel="stylesheet" type="text/css" href="list.css"/>
-	<link rel="stylesheet" type="text/css" href="user.css"/>
-	<link rel="stylesheet" type="text/css" href="pagnav.css"/>
-	<link rel="stylesheet" type="text/css" href="manage.css"/>
-	<link rel="stylesheet" type="text/css" href="manage.css"/>
-	<link type="text/css" href="jquery.datetimepicker.css" rel="stylesheet" />
-	<script type="text/javascript" src="jquery.js"></script> 
-	<script type ="text/javascript" src="jquery.datetimepicker.js"></script>
+	<link rel="stylesheet" type="text/css" href="/css/base_list.css"/>
+	<link rel="stylesheet" type="text/css" href="/css/list.css"/>
+	<link rel="stylesheet" type="text/css" href="/css/user.css"/>
+	<link rel="stylesheet" type="text/css" href="/css/pagnav.css"/>
+	<link rel="stylesheet" type="text/css" href="/css/manage.css"/>
+	<link type="text/css" href="/css/jquery.datetimepicker.css" rel="stylesheet" />
+	<script type="text/javascript" src="/js/jquery.js"></script> 
+	<script type ="text/javascript" src="/js/jquery.datetimepicker.js"></script>
 	</head>
 	<body class="zh_CN weui-desktop-page_base ">
 		<div class="mp-head" id="header">
@@ -24,7 +23,7 @@
 					<div class="weui-desktop-layout">
 						<div class="weui-desktop-layout__side">
 							<h1 class="weui-desktop-logo">
-								<a href="/" title="微信公众平台"></a>
+								<a href="/" title="帮帮账智能票据中心"></a>
 							</h1>
 						</div>
 						<div id="mp_header_account" class="weui-desktop-layout__extra" style="visibility: visible;">
@@ -33,8 +32,8 @@
 									class="weui-desktop-operation-group weui-desktop-account__opr weui-desktop-operation-group_hover weui-desktop-operation_default">
 									<span class="weui-desktop-operation-group_default">
 										<div class="weui-desktop-account__info">
-											<a href="#" class="weui-desktop-account__nickname weui-desktop__small-screen-hide">上海元升帮帮账</a>
-											<a href="#" class="weui-desktop-account__type weui-desktop__small-screen-hide">李奔</a>
+											<a href="#" class="weui-desktop-account__nickname weui-desktop__small-screen-hide" id="user_company_name"></a>
+											<a href="#" class="weui-desktop-account__type weui-desktop__small-screen-hide" id="user_name"></a>
 										</div>
 									</span>
 								</div>
@@ -52,13 +51,13 @@
 						.weui-desktop-menu_home>.weui-desktop-menu__link .weui-desktop-menu__name:before
 						{
 							background:
-							url(menu_home.svg)
+							url(/img/menu_home.svg)
 							no-repeat;
 						}
 						.weui-desktop-menu_home>.weui-desktop-menu__link_current .weui-desktop-menu__name:before
 						{
 							background:
-							url(menu_home_current.svg)
+							url(/img/menu_home_current.svg)
 							no-repeat;
 						}
 						</style>
@@ -74,17 +73,17 @@
 						.weui-desktop-menu_function>.weui-desktop-menu__link .weui-desktop-menu__name:before
 						{
 							background:
-							url(menu_function.svg)
+							url(/img/menu_function.svg)
 							no-repeat;
 						}
 						.weui-desktop-menu_function>.weui-desktop-menu__link_current .weui-desktop-menu__name:before
 						{
 							background:
-							url(menu_function_current.svg)
+							url(/img/menu_function_current.svg)
 							no-repeat;
 						}
 						.ico-load{display:inline-block;width:18px;height:18px;margin:-1px 5px 0 0;*margin-top:3px;line-height:100px;vertical-align:middle;overflow:hidden;}
-						.ico-load.white{background:url("loading_18_green.gif") no-repeat;}
+						.ico-load.white{background:url("/img/loading_18_green.gif") no-repeat;}
 						.ico-load.hide{display:none;}
 						</style>
 						<li class="weui-desktop-menu__item weui-desktop-menu_function">
@@ -121,13 +120,20 @@
 								<div class="global_mod user_global_opr float_layout">
 									<div class="global_info">
 										<div class="search_bar" id="searchBar">
-										<span class="frm_input_box search with_del append ">
-											会计期间:&emsp;<input type="text" value="2018-07" id="form_datetime" style="border: 0px;outline:none;cursor: pointer;">
+										<span class="frm_input_box search with_del append " style="padding-right:0px;">
+											会计期间:&emsp;<input type="text" value="" id="form_datetime" style="border: 0px;outline:none;cursor: pointer;">
 										</span>
 										</div>
 									</div>
-									<div class="global_extra">
+									<div class="global_extra" style="float:right;">
 										<a id="export_a" href="javascript:export_loading();" class="btn btn_primary btn_add"><i id="loading_img" class="ico-load white hide"></i>导出凭证Excel</a>
+									</div>
+									<div class="group_select" style="float:right;margin-top:5px;">
+										<label id="isDetail" for="selectAll"
+											class="group_select_label frm_checkbox_label"> <i
+											class="icon_checkbox" onclick="isDetail(this)"></i><input type="checkbox"
+											class="frm_checkbox">是否分明细
+										</label>
 									</div>
 								</div>
 								<div class="inner_container_box side_r cell_layout">
@@ -139,97 +145,35 @@
 														<tr>
 															<th class="table_cell user no_extra" colspan="2">
 																<div class="group_select">
-																	<label for="selectAll"
+																	<label id="selectAll" for="selectAll"
 																		class="group_select_label frm_checkbox_label"> <i
-																		class="icon_checkbox"></i> <input type="checkbox"
-																		class="frm_checkbox" id="selectAll"> 全选
+																		class="icon_checkbox" onclick="selectAll()"></i> <input type="checkbox"
+																		class="frm_checkbox"> 全选
 																	</label>
-																	<a class="btn btn_default js_tag_putOn_btn" href="javascript:openConfirmDlg();">一键删除</a>
+																	<a class="btn btn_default js_tag_putOn_btn" href="javascript:deleteAllSelectedInvoice();">一键删除</a>
 																</div>
 															</th>
 														</tr>
 													</thead>
-													<tbody class="tbody" id="userGroups">
-														<tr>
-															<td class="table_cell user">
-																<div class="user_info">
-																	<label for="checkoSTV_t5y7_cldzQr0gjIAQn7d-aA"
-																		class="frm_checkbox_label"><i
-																		class="icon_checkbox"></i><input
-																		class="frm_checkbox js_select" type="checkbox"
-																		value="oSTV_t5y7_cldzQr0gjIAQn7d-aA"
-																		id="checkoSTV_t5y7_cldzQr0gjIAQn7d-aA">
-																	</label>
-																	<a href="javascript:opendlg('111');">
-																	<span class="remark_name">供应方名称:上海狂风科技有限公司</span>
-																	<span class="avatar">
-																		<img src="invoice01.jpg" data-id="oSTV_t4DEXmGjf7lJbFQ2xfMDDZQ" class="js_msgSenderAvatar">
-																	</span>
-																	<div class="js_tags user_tag_area">
-																		<span class="js_tags_list user_tag_list">合计金额:&emsp;102933.78元</span>
-																	</div>
-																	<div class="js_tags user_tag_area">
-																		<span class="js_tags_list user_tag_list">合计税额:&emsp;2563.25元</span>
-																	</div>
-																	<div class="js_tags user_tag_area">
-																		<span class="js_tags_list user_tag_list">开票日期:&emsp;2018年7月14日</span>
-																	</div>
-																	</a>
-																</div>
-															</td>
-															<td class="table_cell user_opr tr" style="text-align:right;">
-																<a class="btn remark js_msgSenderRemark" data-fakeid="oSTV_t9-tNksUT_78czxDstmXXNc">删除</a>
-															</td>
-														</tr>
-														<tr>
-															<td class="table_cell user">
-																<div class="user_info">
-																	<label for="checkoSTV_t5y7_cldzQr0gjIAQn7d-aA"
-																		class="frm_checkbox_label selected"><i
-																		class="icon_checkbox"></i><input
-																		class="frm_checkbox js_select" type="checkbox"
-																		value="oSTV_t5y7_cldzQr0gjIAQn7d-aA"
-																		id="checkoSTV_t5y7_cldzQr0gjIAQn7d-aA">
-																	</label>
-																	<a href="javascript:opendlg('111');">
-																	<span class="remark_name">供应方名称:上海狂风科技有限公司</span>
-																	<span class="avatar">
-																		<img src="invoice01.jpg" data-id="oSTV_t4DEXmGjf7lJbFQ2xfMDDZQ" class="js_msgSenderAvatar">
-																	</span>
-																	<div class="js_tags user_tag_area">
-																		<span class="js_tags_list user_tag_list">合计金额:&emsp;102933.78元</span>
-																	</div>
-																	<div class="js_tags user_tag_area">
-																		<span class="js_tags_list user_tag_list">合计税额:&emsp;2563.25元</span>
-																	</div>
-																	<div class="js_tags user_tag_area">
-																		<span class="js_tags_list user_tag_list">开票日期:&emsp;2018年7月14日</span>
-																	</div>
-																	</a>
-																</div>
-															</td>
-															<td class="table_cell user_opr tr" style="text-align:right;">
-																<a class="btn remark js_msgSenderRemark" data-fakeid="oSTV_t9-tNksUT_78czxDstmXXNc">删除</a>
-															</td>
-														</tr>
+													<tbody class="tbody" id="invoice_list">
 													</tbody>
 												</table>
-												<p class="no_result" style="display: none;"></p>
+												<p class="no_result" id="noresult" style="display: none;">当前会计期间没有数据</p>
 											</div>
 											<div class="tool_area">
 												<div class="pagination_wrp js_pageNavigator">
 													<div class="pagination" id="wxPagebar_1532066943311">
 														<span class="page_nav_area"> <a
 															href="javascript:void(0);" class="btn page_first"
-															style="display: none;"></a> <a href="javascript:void(0);"
+															style="display: none;"></a> <a href="javascript:prePage();"
 															class="btn page_prev" style="display: none;"><i
-																class="arrow"></i></a> <span class="page_num"> <label>1</label>
-																<span class="num_gap">/</span> <label>1</label>
-														</span> <a href="javascript:void(0);" class="btn page_next"><i
+																class="arrow"></i></a> <span class="page_num"> <label id="current_page">0</label>
+																<span class="num_gap">/</span><label id="total_page">0</label>
+														</span> <a href="javascript:nextPage();" class="btn page_next" style="display: none;"><i
 																class="arrow"></i></a> <a href="javascript:void(0);"
 															class="btn page_last" style="display: none;"></a>
-														</span> <span class="goto_area"> <input type="text"> <a
-															href="javascript:void(0);" class="btn page_go">跳转</a>
+														</span> <span class="goto_area"> <input type="text" id="skip_page"> <a
+															href="javascript:skipPage();" class="btn page_go">跳转</a>
 														</span>
 
 													</div>
@@ -334,7 +278,7 @@
 					</div>
 					<div id="detail_h" style="padding:20px 20px;color:#6c6c6c;font-size:20px;">
 						<div style="height:60px;">
-							<p>您确定要删除当前记录么？</p>
+							<p id="dlg_tip"></p>
 						</div>
 					</div>
 					<div class="processor_bar_wrp js_process">
@@ -343,11 +287,11 @@
 					</div>
 					<div id="detail_h" style="padding:20px 20px;color:#6c6c6c;font-size:10px;">
 						<div style="height:30px;">
-							<div style="width:50%;float:left;">
-								<a href="javascript:;" class="user_opr btn remark">确定</a>
+							<div style="width:50%;float:left;" id="confirm_dlg_confirm">
+								<a href="javascript:deleteInvoiceConfirm();" class="user_opr btn remark">确定</a>
 							</div>
-							<div style="width:50%;float:right;text-align:right;">
-								<a href="javascript:;" class="btn btn_primary btn_add">取消</a>
+							<div style="width:50%;float:right;text-align:right;" id="confirm_dlg_cancel">
+								<a href="javascript:closedlgForBtn();" class="btn btn_primary btn_add">取消</a>
 							</div>
 						</div>
 					</div>
@@ -359,15 +303,38 @@
 			<iframe frameborder="0" style="filter:progid:DXImageTransform.Microsoft.Alpha(opacity:0);position:absolute;top:0px;left:0px;width:100%;height:100%;" src="about:blank">
 			</iframe>
 		</div>
+	</body>
 	<script>
+		var is_detail = 0;
+	    var bill_date = "";
+	    var curDate = new Date();
+	    var month = (curDate.getMonth() + 1);
+	    bill_date = curDate.getFullYear() + "-" + (month<10?"0"+month:month);
+	    console.log(bill_date);
+		var current_page = 1;
+		var count_pre_page = 5;
+		var total_page = 1;
+		var deleteInvoiceIds = {}; 
+		var currentDelInvoiceId = "";
 		$('#form_datetime').datetimepicker({
-			minView: "month", //选择日期后，不会再跳转去选择时分秒 
-                    format: "Y-m", //选择日期后，文本框显示的日期格式 
-                    timepicker:false,
-                    autoclose: true
+			minView: "month",
+			CustomFormat: "Y-m",
+            changeMonth: true,
+            changeYear: true,
+            timepicker:false,
+            autoclose: true,
+            value: new Date(),
+            Format: 'Custom',
+            onSelectDate: function(current_time,$input){
+            	var month = (current_time.getMonth() + 1);
+            	bill_date = current_time.getFullYear() + "-" + (month<10?"0"+month:month);
+            	current_page = 1;
+            	getAllInvoice();
+            }
 		});
 		$.datetimepicker.setLocale('ch');
-		function opendlg(args){
+		
+		function opendlg(){
 			var width = document.documentElement.clientWidth;
 			var height = document.documentElement.clientHeight;
 			document.getElementById("item_detail").style.width = "600px";
@@ -378,19 +345,66 @@
 			document.getElementById("dlg_mask").style.display = "";
 			document.getElementById("item_detail").style.display = "";
 		}
-		function closedlg(args){
+		function closedlg(){
 			document.getElementById("dlg_mask").style.display = "none";
 			document.getElementById("item_detail").style.display = "none";
 			document.getElementById("confirm_dlg").style.display = "none";
+			$("#dlg_tip").html("");
+		}
+		function closedlgForBtn(){
+			currentDelInvoiceId = "";
+			$("#confirm_dlg_cancel").show();
+			$("#confirm_dlg_confirm").show();
+			closedlg();
 		}
 		function export_loading(){
-			console.log('1111');
+			if(total_page == 0){
+				$("#confirm_dlg_cancel").hide();
+				$("#confirm_dlg_confirm").hide();
+				var width = document.documentElement.clientWidth;
+				var height = document.documentElement.clientHeight;
+				document.getElementById("confirm_dlg").style.width = "600px";
+				document.getElementById("confirm_dlg").style.height = (height * 2 / 3) + "px";
+				document.getElementById("confirm_dlg").style.top = (height/2 - (height/3)) + "px";
+				document.getElementById("confirm_dlg").style.left = (width/2 - 300) + "px";
+				document.getElementById("dlg_mask").style.display = "";
+				document.getElementById("confirm_dlg").style.display = "";
+				$("#dlg_tip").html("当前会计期间没有票据，无法生成凭证！");
+				return;
+			}
 			$("#export_a").attr('href', 'javascript:;');
 			$("#loading_img").removeClass("hide");
-			setTimeout(function(){
-				$("#loading_img").addClass("hide");
-				$("#export_a").attr('href', 'javascript:export_loading();');
-			}, 4000);
+			$.ajax({
+				url: '/admin/downloadVoucherPath',
+				type: "POST",
+				data: {
+					bill_date:bill_date,
+					is_detail:is_detail,
+				},
+				success: function(data) {
+					$("#loading_img").addClass("hide");
+					$("#export_a").attr('href', 'javascript:export_loading();');
+					if(data.error_code != "000000"){
+						$("#confirm_dlg_cancel").hide();
+						$("#confirm_dlg_confirm").hide();
+						var width = document.documentElement.clientWidth;
+						var height = document.documentElement.clientHeight;
+						document.getElementById("confirm_dlg").style.width = "600px";
+						document.getElementById("confirm_dlg").style.height = (height * 2 / 3) + "px";
+						document.getElementById("confirm_dlg").style.top = (height/2 - (height/3)) + "px";
+						document.getElementById("confirm_dlg").style.left = (width/2 - 300) + "px";
+						document.getElementById("dlg_mask").style.display = "";
+						document.getElementById("confirm_dlg").style.display = "";
+						$("#dlg_tip").html("生成凭证出错，请稍后重试！");
+					} else {
+						$('<form action="/admin/downloadVoucher" method="post">' +
+				                '<input type="text" name="bill_date" value="'+bill_date+'"/>' +
+				                '<input type="text" name="excel_path" value="'+data.xls_path+'"/>' +
+				            '</form>')
+				    	.appendTo('body').submit().remove();
+					}
+				}
+			});
 		}
 		function openConfirmDlg(){
 			var width = document.documentElement.clientWidth;
@@ -402,6 +416,268 @@
 			document.getElementById("dlg_mask").style.display = "";
 			document.getElementById("confirm_dlg").style.display = "";
 		}
+		function getAllInvoice(){
+			$("#invoice_list").html("");
+			$.ajax({
+				url: '/admin/getAllInvoiceForWeb',
+				type: "POST",
+				data: {
+					bill_date:bill_date,
+					current_page:current_page,
+					count_pre_page:count_pre_page,
+				},
+				success: function(data) {
+					var listString = "";
+					if(data.total == 0) {
+						$("#noresult").show();
+						$("#current_page").html("0");
+						$("#total_page").html("0");
+						total_page = 0;
+					} else {
+						$("#noresult").hide();
+						for(var index in data.data){
+							listString = listString + "<tr><td class='table_cell user'><div class='user_info'><label invoice_id='"+data.data[index].id+"' for='checkoSTV_t5y7_cldzQr0gjIAQn7d-aA'class='frm_checkbox_label'><i class='icon_checkbox'></i><input class='frm_checkbox js_select' type='checkbox' value='oSTV_t5y7_cldzQr0gjIAQn7d-aA' id='checkoSTV_t5y7_cldzQr0gjIAQn7d-aA'></label><a href='javascript:opendlg();'><span class='remark_name'>供应方名称:"+data.data[index].supply_name+"</span><span class='avatar'><img src='/img/invoice01.jpg' data-id='oSTV_t4DEXmGjf7lJbFQ2xfMDDZQ' class='js_msgSenderAvatar'></span><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list'>合计金额:&emsp;"+data.data[index].amount+"元</span></div><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list'>合计税额:&emsp;"+data.data[index].tax+"元</span></div><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list' style='width:50%;float:left;'>开票日期:&emsp;"+data.data[index].kprq.substring(0,4)+"年"+data.data[index].kprq.substring(4,2)+"月"+data.data[index].kprq.substring(6,2)+"日</span><span class='js_tags_list user_tag_list' style='width:50%;float:right;color:#"+(data.data[index].rec_status==0?"7d7dff":(data.data[index].rec_status==1?"2f9833":"ff5809"))+";'>识别状态:&emsp;"+(data.data[index].rec_status==0?"正在识别":(data.data[index].rec_status==1?"识别成功":"识别失败"))+"</span></div></a></div></td><td class='table_cell user_opr tr' style='text-align:right;'><a href='javascript:deleteInvoiceForSingle("+data.data[index].id+");' class='btn remark js_msgSenderRemark' data-fakeid='oSTV_t9-tNksUT_78czxDstmXXNc'>删除</a></td></tr>";
+						}
+						$("#invoice_list").html(listString);
+						$("#current_page").html(1);
+						total_page = Math.ceil(data.total/count_pre_page);
+						$("#total_page").html(total_page);
+						if(current_page < total_page) $(".btn.page_next").show();
+						bindCheckEvent();
+					}
+				}
+			});
+		}
+		function skipPage(){
+			var skipPage = parseInt($("#skip_page").val()==""?0:$("#skip_page").val());
+			if(skipPage<1 || skipPage>total_page) {
+				$("#confirm_dlg_cancel").hide();
+				$("#confirm_dlg_confirm").hide();
+				var width = document.documentElement.clientWidth;
+				var height = document.documentElement.clientHeight;
+				document.getElementById("confirm_dlg").style.width = "600px";
+				document.getElementById("confirm_dlg").style.height = (height * 2 / 3) + "px";
+				document.getElementById("confirm_dlg").style.top = (height/2 - (height/3)) + "px";
+				document.getElementById("confirm_dlg").style.left = (width/2 - 300) + "px";
+				document.getElementById("dlg_mask").style.display = "";
+				document.getElementById("confirm_dlg").style.display = "";
+				$("#dlg_tip").html("当前页码范围不正确，请输入正确的页码！");
+				return;
+			}
+			current_page = skipPage
+			if(current_page == 1) {
+				$(".btn.page_prev").hide();
+			} else {
+				$(".btn.page_prev").show();
+			}
+			if(current_page < total_page) $(".btn.page_next").show();
+			$.ajax({
+				url: '/admin/getAllInvoiceForWeb',
+				type: "POST",
+				data: {
+					bill_date:bill_date,
+					current_page:current_page,
+					count_pre_page:count_pre_page,
+				},
+				success: function(data) {
+					var listString = "";
+					if(data.total == 0) {
+					} else {
+						for(var index in data.data){
+							listString = listString + "<tr><td class='table_cell user'><div class='user_info'><label invoice_id='"+data.data[index].id+"' for='checkoSTV_t5y7_cldzQr0gjIAQn7d-aA'class='frm_checkbox_label'><i class='icon_checkbox'></i><input class='frm_checkbox js_select' type='checkbox' value='oSTV_t5y7_cldzQr0gjIAQn7d-aA' id='checkoSTV_t5y7_cldzQr0gjIAQn7d-aA'></label><a href='javascript:opendlg();'><span class='remark_name'>供应方名称:"+data.data[index].supply_name+"</span><span class='avatar'><img src='/img/invoice01.jpg' data-id='oSTV_t4DEXmGjf7lJbFQ2xfMDDZQ' class='js_msgSenderAvatar'></span><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list'>合计金额:&emsp;"+data.data[index].amount+"元</span></div><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list'>合计税额:&emsp;"+data.data[index].tax+"元</span></div><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list' style='width:50%;float:left;'>开票日期:&emsp;"+data.data[index].kprq.substring(0,4)+"年"+data.data[index].kprq.substring(4,2)+"月"+data.data[index].kprq.substring(6,2)+"日</span><span class='js_tags_list user_tag_list' style='width:50%;float:right;color:#"+(data.data[index].rec_status==0?"7d7dff":(data.data[index].rec_status==1?"2f9833":"ff5809"))+";'>识别状态:&emsp;"+(data.data[index].rec_status==0?"正在识别":(data.data[index].rec_status==1?"识别成功":"识别失败"))+"</span></div></a></div></td><td class='table_cell user_opr tr' style='text-align:right;'><a href='javascript:deleteInvoiceForSingle("+data.data[index].id+");' class='btn remark js_msgSenderRemark' data-fakeid='oSTV_t9-tNksUT_78czxDstmXXNc'>删除</a></td></tr>";
+						}
+						$("#invoice_list").html(listString);
+						$("#current_page").html(current_page);
+						$("#total_page").html(total_page);
+						bindCheckEvent();
+					}
+				}
+			});
+		}
+		function prePage(){
+			$("#skip_page").val("");
+			current_page--;
+			if(current_page == 1) $(".btn.page_prev").hide();
+			if(current_page < total_page) $(".btn.page_next").show();
+			$.ajax({
+				url: '/admin/getAllInvoiceForWeb',
+				type: "POST",
+				data: {
+					bill_date:bill_date,
+					current_page:current_page,
+					count_pre_page:count_pre_page,
+				},
+				success: function(data) {
+					var listString = "";
+					if(data.total == 0) {
+					} else {
+						for(var index in data.data){
+							listString = listString + "<tr><td class='table_cell user'><div class='user_info'><label invoice_id='"+data.data[index].id+"' for='checkoSTV_t5y7_cldzQr0gjIAQn7d-aA'class='frm_checkbox_label'><i class='icon_checkbox'></i><input class='frm_checkbox js_select' type='checkbox' value='oSTV_t5y7_cldzQr0gjIAQn7d-aA' id='checkoSTV_t5y7_cldzQr0gjIAQn7d-aA'></label><a href='javascript:opendlg();'><span class='remark_name'>供应方名称:"+data.data[index].supply_name+"</span><span class='avatar'><img src='/img/invoice01.jpg' data-id='oSTV_t4DEXmGjf7lJbFQ2xfMDDZQ' class='js_msgSenderAvatar'></span><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list'>合计金额:&emsp;"+data.data[index].amount+"元</span></div><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list'>合计税额:&emsp;"+data.data[index].tax+"元</span></div><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list' style='width:50%;float:left;'>开票日期:&emsp;"+data.data[index].kprq.substring(0,4)+"年"+data.data[index].kprq.substring(4,2)+"月"+data.data[index].kprq.substring(6,2)+"日</span><span class='js_tags_list user_tag_list' style='width:50%;float:right;color:#"+(data.data[index].rec_status==0?"7d7dff":(data.data[index].rec_status==1?"2f9833":"ff5809"))+";'>识别状态:&emsp;"+(data.data[index].rec_status==0?"正在识别":(data.data[index].rec_status==1?"识别成功":"识别失败"))+"</span></div></a></div></td><td class='table_cell user_opr tr' style='text-align:right;'><a href='javascript:deleteInvoiceForSingle("+data.data[index].id+");' class='btn remark js_msgSenderRemark' data-fakeid='oSTV_t9-tNksUT_78czxDstmXXNc'>删除</a></td></tr>";
+						}
+						$("#invoice_list").html(listString);
+						$("#current_page").html(current_page);
+						$("#total_page").html(total_page);
+						bindCheckEvent();
+					}
+				}
+			});
+		}
+		function nextPage(){
+			$("#skip_page").val("");
+			current_page++;
+			if(current_page == total_page) $(".btn.page_next").hide();
+			if(current_page > 1) $(".btn.page_prev").show();
+			$.ajax({
+				url: '/admin/getAllInvoiceForWeb',
+				type: "POST",
+				data: {
+					bill_date:bill_date,
+					current_page:current_page,
+					count_pre_page:count_pre_page,
+				},
+				success: function(data) {
+					var listString = "";
+					if(data.total == 0) {
+					} else {
+						for(var index in data.data){
+							listString = listString + "<tr><td class='table_cell user'><div class='user_info'><label invoice_id='"+data.data[index].id+"' for='checkoSTV_t5y7_cldzQr0gjIAQn7d-aA'class='frm_checkbox_label'><i class='icon_checkbox'></i><input class='frm_checkbox js_select' type='checkbox' value='oSTV_t5y7_cldzQr0gjIAQn7d-aA' id='checkoSTV_t5y7_cldzQr0gjIAQn7d-aA'></label><a href='javascript:opendlg();'><span class='remark_name'>供应方名称:"+data.data[index].supply_name+"</span><span class='avatar'><img src='/img/invoice01.jpg' data-id='oSTV_t4DEXmGjf7lJbFQ2xfMDDZQ' class='js_msgSenderAvatar'></span><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list'>合计金额:&emsp;"+data.data[index].amount+"元</span></div><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list'>合计税额:&emsp;"+data.data[index].tax+"元</span></div><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list' style='width:50%;float:left;'>开票日期:&emsp;"+data.data[index].kprq.substring(0,4)+"年"+data.data[index].kprq.substring(4,2)+"月"+data.data[index].kprq.substring(6,2)+"日</span><span class='js_tags_list user_tag_list' style='width:50%;float:right;color:#"+(data.data[index].rec_status==0?"7d7dff":(data.data[index].rec_status==1?"2f9833":"ff5809"))+";'>识别状态:&emsp;"+(data.data[index].rec_status==0?"正在识别":(data.data[index].rec_status==1?"识别成功":"识别失败"))+"</span></div></a></div></td><td class='table_cell user_opr tr' style='text-align:right;'><a href='javascript:deleteInvoiceForSingle("+data.data[index].id+");' class='btn remark js_msgSenderRemark' data-fakeid='oSTV_t9-tNksUT_78czxDstmXXNc'>删除</a></td></tr>";
+						}
+						$("#invoice_list").html(listString);
+						$("#current_page").html(current_page);
+						$("#total_page").html(total_page);
+						bindCheckEvent();
+					}
+				}
+			});
+		}
+		$.ajax({
+			url: '/admin/getUserInfo',
+			type: "POST",
+			data: {},
+			success: function(data) {
+				$("#user_company_name").html(data.user_company_name == null?"":data.user_company_name);
+				$("#user_name").html(data.user_name == null?"":data.user_name);
+				$("#syje").html(data.balance + "元");
+				$("#kycs").html(data.balance * 10 + "次");
+				$("#total").html(data.total);
+				getAllInvoice();
+			}
+		});
+		function selectAll(){
+			deleteInvoiceIds = {};
+			if($("#selectAll").hasClass("selected")) {
+				$("#selectAll").removeClass("selected");
+				$("tbody .icon_checkbox").each(function(){
+					var node = $(this)[0].parentNode;
+					$(node).removeClass("selected");
+				});
+			} else {
+				$("#selectAll").addClass("selected");
+				$("tbody .icon_checkbox").each(function(){
+					var node = $(this)[0].parentNode;
+					$(node).addClass("selected");
+					deleteInvoiceIds[$(node).attr("invoice_id")] = "";
+				});
+			}			
+		}
+		function bindCheckEvent(){
+			$("tbody .icon_checkbox").each(function(){
+				$(this).click(function(){
+					var node = $(this)[0].parentNode;
+					if($(node).hasClass("selected")){
+						$(node).removeClass("selected");
+						delete deleteInvoiceIds[$(node).attr("invoice_id")];
+					} else {
+						$(node).addClass("selected");
+						deleteInvoiceIds[$(node).attr("invoice_id")] = "";
+					}
+				});
+			});
+		}
+		function deleteInvoiceForSingle(invoiceId){
+			currentDelInvoiceId = invoiceId;
+			var width = document.documentElement.clientWidth;
+			var height = document.documentElement.clientHeight;
+			document.getElementById("confirm_dlg").style.width = "600px";
+			document.getElementById("confirm_dlg").style.height = (height * 2 / 3) + "px";
+			document.getElementById("confirm_dlg").style.top = (height/2 - (height/3)) + "px";
+			document.getElementById("confirm_dlg").style.left = (width/2 - 300) + "px";
+			document.getElementById("dlg_mask").style.display = "";
+			document.getElementById("confirm_dlg").style.display = "";
+			$("#dlg_tip").html("您确定要删除当前指定的发票吗？");
+		}
+		function deleteInvoiceConfirm(){
+			if(currentDelInvoiceId != "") {
+				$.ajax({
+					url: '/admin/deleteInvoiceForSingle',
+					type: "POST",
+					data: {
+						invoice_id:parseInt(currentDelInvoiceId)
+					},
+					success: function(data) {
+						window.location.reload();
+					}
+				});
+				closedlgForBtn();
+			} else {
+				var ids = "";
+				for(var key in deleteInvoiceIds){
+					ids = ids + key + "#";
+				}
+				$.ajax({
+					url: '/admin/deleteInvoiceAll',
+					type: "POST",
+					data: {
+						invoice_id:ids
+					},
+					success: function(data) {
+						window.location.reload();
+					}
+				});
+				closedlgForBtn();
+			}
+		}
+		function deleteAllSelectedInvoice(){
+			var hasSelected = false;
+			for(var index in deleteInvoiceIds){
+				hasSelected = true;
+				break;
+			}
+			if(hasSelected){
+				$("#confirm_dlg_cancel").show();
+				$("#confirm_dlg_confirm").show();
+				var width = document.documentElement.clientWidth;
+				var height = document.documentElement.clientHeight;
+				document.getElementById("confirm_dlg").style.width = "600px";
+				document.getElementById("confirm_dlg").style.height = (height * 2 / 3) + "px";
+				document.getElementById("confirm_dlg").style.top = (height/2 - (height/3)) + "px";
+				document.getElementById("confirm_dlg").style.left = (width/2 - 300) + "px";
+				document.getElementById("dlg_mask").style.display = "";
+				document.getElementById("confirm_dlg").style.display = "";
+				$("#dlg_tip").html("您确定要删除当前指定的发票吗？");
+			} else {
+				$("#confirm_dlg_cancel").hide();
+				$("#confirm_dlg_confirm").hide();
+				var width = document.documentElement.clientWidth;
+				var height = document.documentElement.clientHeight;
+				document.getElementById("confirm_dlg").style.width = "600px";
+				document.getElementById("confirm_dlg").style.height = (height * 2 / 3) + "px";
+				document.getElementById("confirm_dlg").style.top = (height/2 - (height/3)) + "px";
+				document.getElementById("confirm_dlg").style.left = (width/2 - 300) + "px";
+				document.getElementById("dlg_mask").style.display = "";
+				document.getElementById("confirm_dlg").style.display = "";
+				$("#dlg_tip").html("请先选择需要删除的发票！");
+			}
+		}
+		function isDetail(ele){
+			var node = $(ele)[0].parentNode;
+			if($(node).hasClass("selected")){
+				$(node).removeClass("selected");
+				is_detail = 0;
+			} else {
+				$(node).addClass("selected");
+				is_detail = 1;
+			}
+		}
 	</script>
-	</body>
 </html>
