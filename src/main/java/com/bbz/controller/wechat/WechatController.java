@@ -55,6 +55,19 @@ public class WechatController {
 		return retMap;
 	}
 	
+	@RequestMapping("/wechat/deduct")
+	@ResponseBody
+	public Map<String, Object> deduct(HttpServletRequest request) {
+		Map<String, Object> retMap = new HashMap<>();
+		String unionId = (String)request.getParameter("unionId");
+		if(userService.deduct(unionId)) {
+			retMap.put("error_code", 000000);
+		} else {
+			retMap.put("error_code", 000001);
+		}
+		return retMap;
+	}
+	
 	@RequestMapping("/wechat/getInvoice")
 	@ResponseBody
 	public List<Map<String, Object>> getInvoice(HttpServletRequest request) {

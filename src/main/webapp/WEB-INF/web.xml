@@ -62,9 +62,6 @@
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
-	<listener>
-		<listener-class>com.bbz.crossdomain.MySessionListener</listener-class>
-	</listener>
 
 	<servlet>
 		<servlet-name>bbz_dispatcher</servlet-name>

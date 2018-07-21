@@ -81,7 +81,7 @@
 		<property name="driverClassName" value="com.mysql.jdbc.Driver">
 		</property>
 		<property name="url"
-			value="jdbc:mysql://139.196.40.99:3306/wechat_invoice_rec?useUnicode=true&amp;characterEncoding=UTF-8"></property>
+			value="jdbc:mysql://127.0.0.1:3306/wechat_invoice_rec?useUnicode=true&amp;characterEncoding=UTF-8"></property>
 		<property name="username" value="root"></property>
 		<property name="password" value="Cckzcbm110"></property>
 		<property name="maxIdle" value="30"></property>
