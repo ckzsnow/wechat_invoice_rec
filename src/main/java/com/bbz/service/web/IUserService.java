@@ -9,7 +9,7 @@ public interface IUserService {
 
 	public Map<String, Object> getUserAccountByUserId(String unionId);
 
-	public List<Map<String, Object>> getAllInvoiceByUserId(String unionId, String index);
+	public List<Map<String, Object>> getAllInvoiceByUserId(String unionId, String index, String date);
 
 	public Map<String, Object> getInvoiceById(String invoice_id);
 
