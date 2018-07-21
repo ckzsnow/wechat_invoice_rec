@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="renderer" content="webkit">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+	<title>帮帮账智能票据</title>
+	<link href="https://res.wx.qq.com/mpres/htmledition/images/favicon3a7b38.ico" rel="Shortcut Icon">
+	<link rel="stylesheet" type="text/css" href="/css/base.css"/>
+	<link rel="stylesheet" type="text/css" href="/css/sea.css">
+	<link rel="stylesheet" type="text/css" href="/css/index.css">
+	<script type="text/javascript" src="/js/jquery.js"></script> 
+	</head>
+	<body class="zh_CN weui-desktop-page_base ">
+		<div class="mp-head" id="header">
+			<div id="mp_header" class="weui-desktop-head" style="width:100%;height:80px;position:fixed;top:0;left:0;z-index:9999;min-width:1200px;">
+				<div class="weui-desktop-head__inner">
+					<div class="weui-desktop-layout">
+						<div class="weui-desktop-layout__side">
+							<h1 class="weui-desktop-logo">
+								<a href="/" title="帮帮账智能票据中心"></a>
+							</h1>
+						</div>
+						<div id="mp_header_account" class="weui-desktop-layout__extra" style="visibility: visible;">
+							<div class="weui-desktop-account">
+								<div
+									class="weui-desktop-operation-group weui-desktop-account__opr weui-desktop-operation-group_hover weui-desktop-operation_default">
+									<span class="weui-desktop-operation-group_default">
+										<div class="weui-desktop-account__info">
+											<a href="#" class="weui-desktop-account__nickname weui-desktop__small-screen-hide" id="user_company_name"></a>
+											<a href="#" class="weui-desktop-account__type weui-desktop__small-screen-hide" id="user_name"></a>
+										</div>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="body" class="mp-body" style="margin-top:80px;min-width:1200px;">
+			<div id="js_container_box" class="weui-desktop-layout weui-desktop-layout_global" style="min-width:1200px;">
+				<div id="js_mp_sidemenu" class="weui-desktop-layout__side">
+					<ul class="weui-desktop-menu weui-desktop-menu_global" id="menuBar">
+						<style>
+						.weui-desktop-menu_home>.weui-desktop-menu__link .weui-desktop-menu__name:before
+						{
+							background:
+							url(/img/menu_home.svg)
+							no-repeat;
+						}
+						.weui-desktop-menu_home>.weui-desktop-menu__link_current .weui-desktop-menu__name:before
+						{
+							background:
+							url(/img/menu_home_current.svg)
+							no-repeat;
+						}
+						</style>
+						<li class="weui-desktop-menu__item weui-desktop-menu_home">
+							<a title="首页" class="weui-desktop-menu__link weui-desktop-menu__link_current" href="#">
+								<span class="weui-desktop-menu__link__inner">
+									<span class="weui-desktop-menu__name">首页</span>
+								</span>
+							</a>
+							<ul class="weui-desktop-sub-menu"></ul>
+						</li>
+						<style>
+						.weui-desktop-menu_function>.weui-desktop-menu__link .weui-desktop-menu__name:before
+						{
+							background:
+							url(/img/menu_function.svg)
+							no-repeat;
+						}
+						.weui-desktop-menu_function>.weui-desktop-menu__link_current .weui-desktop-menu__name:before
+						{
+							background:
+							url(/img/menu_function_current.svg)
+							no-repeat;
+						}
+						</style>
+						<li class="weui-desktop-menu__item weui-desktop-menu_function">
+							<span title="功能" class="weui-desktop-menu__link">
+								<span class="weui-desktop-menu__link__inner">
+									<span class="weui-desktop-menu__name">功能</span>
+								</span>
+							</span>
+							<ul class="weui-desktop-sub-menu">
+								<li class="weui-desktop-sub-menu__item">
+								<a title="自动回复" class="weui-desktop-menu__link " data-id="10006" href="list.html">
+									<span class="weui-desktop-menu__link__inner">
+										<span class="weui-desktop-menu__name">发票记录</span>
+									</span>
+								</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+				<div id="js_mp_main_content" class="weui-desktop-layout__main">
+					<div class="weui-desktop-layout__main__area">
+						<div class="weui-desktop-layout__main__inner">
+							<div id="app" style="visibility: visible;">
+								<div class="main_bd">
+									<div class="weui-desktop-panel weui-desktop-panel_overview">
+										<div class="weui-desktop-panel__hd">
+											<h3 class="weui-desktop-panel__title">帐号整体情况</h3>
+										</div>
+										<div class="weui-desktop-panel__bd">
+											<ul
+												class="weui-desktop-data-overview-list weui-desktop-home-overview">
+												<li class="weui-desktop-data-overview"><span
+													class="weui-desktop-data-overview__title"><svg t="1532063621579" class="icon" style="" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1211" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20"><defs><style type="text/css"></style></defs><path d="M958.057333 64.612385l-164.85323 0-185.357328 249.481452c-49.432885 67.61016-79.667985 112.55149-90.7073 134.823989l-3.15566 0c-32.609691-54.160279-124.625704-182.258429-276.066827-384.305441l-174.316014 0 324.180206 406.776805L121.968801 471.38919l0 89.881061 311.559762 0 0 123.878011L121.968801 685.148261l0 91.034279 311.559762 0 0 180.341928 154.594585 0L588.123149 776.18274l300.518249 0 0-91.034279L588.125547 685.148461l0-123.878011 300.518249 0 0-89.881061L630.721467 471.38939 958.057333 64.612385z" p-id="1212" fill="#8a8a8a"></path></svg>
+														剩余金额 </span> <em class="weui-desktop-data-overview__desc"><a
+														href="javascript:;" id="syje">0元</a></em></li>
+												<li class="weui-desktop-data-overview"><span
+													class="weui-desktop-data-overview__title"><svg
+															width="23" height="15" viewBox="0 0 23 15"
+															xmlns="http://www.w3.org/2000/svg">
+															<path
+																d="M19.405 2.667L14 8.845l-5-3-9 8 1 1 8-7 5 3 6.505-7.318 2.279 1.78L22.488 0l-5.22.997 2.137 1.67z"></path></svg>
+														可用次数 </span> <em class="weui-desktop-data-overview__desc"><a
+														href="javascript:;" id="kycs">0次</a></em></li>
+												<li class="weui-desktop-data-overview"><span
+													class="weui-desktop-data-overview__title"><svg t="1532063899098" class="icon" style="" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2039" xmlns:xlink="http://www.w3.org/1999/xlink" width="30" height="30"><defs><style type="text/css"></style></defs><path d="M783.431 674.42c0-12.78-10.377-23.211-23.211-23.211h-510.526c-12.78 0-23.211 10.377-23.211 23.211s10.377 23.211 23.211 23.211h255.317v46.476h-69.686c-12.78 0-23.211 10.377-23.211 23.211s10.377 23.211 23.211 23.211h92.788c12.834 0 23.265-10.377 23.265-23.211v-69.632h208.842c12.834-0.109 23.211-10.485 23.211-23.265zM760.274 279.893h-510.58c-12.78 0-23.211 10.377-23.211 23.211s10.431 23.211 23.211 23.211h162.475v46.421h-116.053c-12.834 0-23.265 10.377-23.265 23.211v92.843c0 12.78 10.377 23.211 23.265 23.211h417.683c12.78 0 23.211-10.377 23.211-23.211v-92.843c0-12.78-10.377-23.211-23.211-23.211h-116.053v-46.421h162.475c12.78 0 23.211-10.377 23.211-23.211s-10.377-23.211-23.156-23.211zM412.17 465.524h-92.843v-46.421h92.843v46.421zM551.378 465.524h-92.843v-46.421h92.843v46.421zM551.378 372.682h-92.843v-46.367h92.843v46.367zM690.588 419.103v46.476h-92.788v-46.476h92.788zM629.367 711.447c-13.545-3.769-27.415 3.168-30.748 15.401-3.441 12.452 4.861 25.395 18.514 29.218l107.643 31.894c13.599 3.769 27.307-3.168 30.748-15.51s-4.806-25.395-18.404-29.109l-107.753-31.894zM909.588 284.644c-0.109-0.054-0.109-0.054-0.109-0.109-6.281-11.087-20.371-15.073-31.567-8.793s-15.127 20.426-8.847 31.676c-0.054 0-0.054 0 0 0.054 112.395 201.141 40.851 455.202-160.126 568.033-201.25 113.050-455.913 41.615-568.962-159.69-113.104-201.141-41.615-455.913 159.58-568.962 151.333-85.033 331.94-64.389 460.772 35.936l0.765-0.928c0.054 0.054 0.054 0.054 0.054 0.109 10.158 7.81 24.63 5.899 32.549-4.15 7.919-10.212 6.007-24.685-4.096-32.549-0.382-0.382-0.928-0.437-1.201-0.71-143.033-110.265-343.354-131.345-510.799-37.41-223.477 125.665-302.94 408.562-177.329 632.204 125.502 223.423 408.508 302.831 631.985 177.275 223.533-125.556 302.777-408.508 177.329-631.985zM713.853 604.788c12.78 0 23.211-10.377 23.211-23.211s-10.377-23.265-23.211-23.265h-417.738c-12.834 0-23.265 10.377-23.265 23.265 0 12.78 10.377 23.211 23.265 23.211h417.738zM376.561 711.447l-107.643 31.894c-13.653 3.769-21.845 16.821-18.46 29.164 3.441 12.342 17.094 19.333 30.748 15.51l107.588-31.894c13.653-3.823 21.954-16.821 18.569-29.218-3.386-12.288-17.258-19.223-30.802-15.456z" p-id="2040" fill="#8a8a8a"></path></svg>
+														已上传票据总数 </span> <em class="weui-desktop-data-overview__desc"><a
+														href="javascript:;" id="total">0</a></em></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script>
+	$.ajax({
+		url: '/admin/getUserInfo',
+		type: "POST",
+		data: {},
+		success: function(data) {
+			$("#user_company_name").html(data.user_company_name == null?"":data.user_company_name);
+			$("#user_name").html(data.user_name == null?"":data.user_name);
+			$("#syje").html(data.balance + "元");
+			$("#kycs").html(data.balance * 10 + "次");
+			$("#total").html(data.total);
+		}
+	});
+	</script>
+</html>

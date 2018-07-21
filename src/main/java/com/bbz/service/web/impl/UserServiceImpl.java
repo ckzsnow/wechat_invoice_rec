@@ -153,5 +153,71 @@ public class UserServiceImpl implements IUserService {
 		}
 		return affectedRows != 0;
 	}
+
+	@Override
+	public Map<String, Object> getUserInfoForWeb(String userId) {
+		String sql = "select user.*, count(invoice.id) as total from user left join invoice on invoice.user_id=? and user.user_id=?";
+		Map<String, Object> retMap = new HashMap<>();
+		try {
+			retMap = jdbcTemplate.queryForMap(sql, userId, userId);
+		} catch(Exception e) {
+			logger.error(e.toString());
+		}
+		return retMap;
+	}
+
+	@Override
+	public Map<String, Object> getAllInvoiceForWeb(String userId, String billDate, int currentPage,
+			int countPrePage) {
+		List<Map<String, Object>> invoiceList = new ArrayList<>();
+		Map<String, Object> retMap = new HashMap<>();
+		String sqlTotal = "select count(id) from invoice where user_id=? and bill_date=?";
+		String sqlRecorde = "select * from invoice where user_id=? and bill_date=? order by create_time desc limit ?,?";
+		int total = 0;
+		try {
+			total = jdbcTemplate.queryForObject(sqlTotal, new Object[]{userId, billDate}, Integer.class);
+			retMap.put("total", total);
+			if(total != 0) {
+				invoiceList = jdbcTemplate.queryForList(sqlRecorde, userId, billDate, (currentPage-1) * countPrePage, countPrePage);
+				retMap.put("data", invoiceList);
+			} else {
+				retMap.put("data", null);
+			}			
+		} catch(Exception e) {
+			logger.error(e.toString());
+			retMap.put("total", 0);
+			retMap.put("data", null);
+		}
+		return retMap;
+	}
+
+	@Override
+	public void deleteInvoiceForSingle(long invoice_id) {
+		String sql = "delete from invoice where id=?";
+		try {
+			jdbcTemplate.update(sql, invoice_id);
+		} catch (Exception e) {
+			logger.debug(e.toString());
+		}
+	}
+
+	@Override
+	public void deleteInvoiceAll(String ids) {
+		String[] invoiceIds = ids.split("#");
+		StringBuilder sb = new StringBuilder();
+		Object[] args = new Object[invoiceIds.length];
+		sb.append("delete from invoice where ");
+		int index = 0;
+		for(String id : invoiceIds){
+			sb.append("id=? or ");
+			args[index++] = Long.valueOf(id);
+		}
+		String sql = sb.toString().substring(0, sb.length()-3);
+		try {
+			jdbcTemplate.update(sql, args);
+		} catch (Exception e) {
+			logger.debug(e.toString());
+		}
+	}
 	
 }
