@@ -127,7 +127,7 @@ public class GenVoucherServiceImpl implements IGenVoucherService {
 				HSSFCell cell = row.createCell(entry.getKey());
 				cell.setCellType(HSSFCell.CELL_TYPE_STRING);
 				cell.setCellValue(entry.getValue());
-				invoiceSheet.setColumnWidth(entry.getKey(), entry.getValue().getBytes().length*256);
+				//invoiceSheet.setColumnWidth(entry.getKey(), entry.getValue().getBytes().length*256);
 			}
 			rowIndex = 1;
 			for(Map<String, Object> voucherEntry : voucherDataList){
@@ -138,10 +138,13 @@ public class GenVoucherServiceImpl implements IGenVoucherService {
 					String colValue = "";
 					if(voucherEntry.containsKey(ExcelTitleUtil.voucherExcelDataMap.get(colIndex))){
 						colValue = String.valueOf(voucherEntry.get(ExcelTitleUtil.voucherExcelDataMap.get(colIndex)));
+						if(("debit_amount").equals(ExcelTitleUtil.voucherExcelDataMap.get(colIndex)) || ("lender_amount").equals(ExcelTitleUtil.voucherExcelDataMap.get(colIndex))){
+							if(("0.0").equals(colValue)) colValue = "";
+						}
 					}
 					if(!isDetail && ("supply_name").equals(ExcelTitleUtil.voucherExcelDataMap.get(colIndex))) colValue = "";
 					cell.setCellValue(colValue);
-					invoiceSheet.setColumnWidth(colIndex, colValue.getBytes().length*256);
+					//invoiceSheet.setColumnWidth(colIndex, colValue.getBytes().length*256);
 				}
 				rowIndex++;
 			}
@@ -173,7 +176,7 @@ public class GenVoucherServiceImpl implements IGenVoucherService {
 					}
 					if(!isDetail && ("supply_name").equals(ExcelTitleUtil.voucherExcelDataMap.get(colIndex))) colValue = "";
 					cell.setCellValue(colValue);
-					invoiceSheet.setColumnWidth(colIndex, colValue.getBytes().length*256);
+					//invoiceSheet.setColumnWidth(colIndex, colValue.getBytes().length*256);
 				}
 				infoMap.remove("debit_amount");
 				infoMap.put("lender_amount", String.valueOf(faDepreciationEntry.get("monthly_depreciation")));
@@ -189,7 +192,7 @@ public class GenVoucherServiceImpl implements IGenVoucherService {
 					}
 					if(!isDetail && ("supply_name").equals(ExcelTitleUtil.voucherExcelDataMap.get(colIndex))) colValue = "";
 					cell.setCellValue(colValue);
-					invoiceSheet.setColumnWidth(colIndex, colValue.getBytes().length*256);
+					//invoiceSheet.setColumnWidth(colIndex, colValue.getBytes().length*256);
 				}
 				rowIndex++;
 				voucherNumMax++;
