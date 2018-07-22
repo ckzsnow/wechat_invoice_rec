@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.bbz.service.web.IGenVoucherService;
 import com.bbz.service.web.IUserService;
+import com.bbz.service.wechat.IWechatSubmitInvoiceService;
 
 @Controller
 public class WebController {
@@ -30,6 +31,9 @@ public class WebController {
 	
 	@Autowired
 	private IUserService userService;
+	
+	@Autowired
+	private IWechatSubmitInvoiceService wechatSubmitInvoiceService;
 	
 	@RequestMapping("/")
 	public String getRootHtml() {
@@ -61,6 +65,13 @@ public class WebController {
 		}
 		userId = "oZEuwxBPWrDkHjFL1Q8VTHv_o_II";
 		return userService.getAllInvoiceForWeb(userId, billDate, currentPage_, countPrePage_);
+	}
+	
+	@RequestMapping("/admin/getInvoiceDetailByIdForWeb")
+	@ResponseBody
+	public Map<String, Object> getInvoiceDetailByIdForWeb(HttpServletRequest request) {
+		int invoiceId = Integer.valueOf(request.getParameter("invoice_id"));
+		return wechatSubmitInvoiceService.wechatGetInvoiceItem(invoiceId);
 	}
 	
 	@RequestMapping("/admin/deleteInvoiceForSingle")
