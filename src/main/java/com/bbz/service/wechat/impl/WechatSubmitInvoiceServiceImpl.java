@@ -74,7 +74,7 @@ public class WechatSubmitInvoiceServiceImpl implements IWechatSubmitInvoiceServi
 			return retMap;
 		}
 		long invoiceId = keyHolder.getKey().longValue();
-		jsonObject.put("invoice_id", invoiceId);
+		jsonObject.put("invoice_id", String.valueOf(invoiceId));
 		
 		//向redis中写入需要执行的识别任务
 		String jsonData = jsonObject.toJSONString();
@@ -115,8 +115,8 @@ public class WechatSubmitInvoiceServiceImpl implements IWechatSubmitInvoiceServi
 		}
 		Map<String, Object> invoiceDataMap = new HashMap<>();
 		List<Map<String, Object>> invoiceItemDataMap = new ArrayList<>();
-		String sqlMap = "select * from invoice where id=?";
-		String sqlList = "select * from invoice_item where invoice_id=?";
+		String sqlMap = "select *, DATE_FORMAT(create_time,'%Y-%m-%d %T') as create_time_readable from invoice where id=?";
+		String sqlList = "select *, DATE_FORMAT(create_time,'%Y-%m-%d %T') as create_time_readable from invoice_item where invoice_id=?";
 		try{
 			invoiceDataMap = jdbcTemplate.queryForMap(sqlMap, invoiceId);
 			invoiceItemDataMap = jdbcTemplate.queryForList(sqlList, invoiceId);
