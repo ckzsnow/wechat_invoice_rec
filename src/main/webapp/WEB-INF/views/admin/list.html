@@ -208,50 +208,30 @@
 					<div id="detail_h" style="padding:20px 20px;overflow-y:scroll; color:#6c6c6c;font-size:10px;">
 						<div style="height:60px;">
 							<div style="width:50%;float:left;">
-								<p>购买方名称:&emsp;&emsp;上海元升财务咨询有限公司</p>
-								<p>纳税人识别号:&emsp;上海元升财务咨询有限公司</p>
-								<p>地址电话:&emsp;&emsp;&emsp;上海元升财务咨询有限公司</p>
-								<p>开户行及账号:&emsp;上海元升财务咨询有限公司</p>
+								<p id="buy_name"></p>
+								<p id="buy_code"></p>
+								<p id="buy_address"></p>
+								<p id="buy_bank"></p>
 							</div>
 							<div style="width:50%;float:right;text-align:right;">
-								<p>销售方名称:&emsp;&emsp;上海元升财务咨询有限公司</p>
-								<p>纳税人识别号:&emsp;上海元升财务咨询有限公司</p>
-								<p>地址电话:&emsp;&emsp;&emsp;上海元升财务咨询有限公司</p>
-								<p>开户行及账号:&emsp;上海元升财务咨询有限公司</p>
+								<p id="supply_name"></p>
+								<p id="supply_code"></p>
+								<p id="supply_address"></p>
+								<p id="supply_bank"></p>
 							</div>
 						</div>
 						<div>
-							<table style="width:100%;text-align:center;margin-top:20px;" border="1">
-							  <tr>
-								<th>货物或应税劳务、服务名称</th>
-								<th>规格型号</th>
-								<th>单位</th>
-								<th>数量</th>
-								<th>单价</th>
-								<th>金额</th>
-								<th>税率</th>
-								<th>税额</th>
-							  </tr>
-							  <tr>
-								<td>技术服务费</td>
-								<td>次数</td>
-								<td>次</td>
-								<td>1</td>
-								<td>10000.88</td>
-								<td>10000.00</td>
-								<td>6%</td>
-								<td>600</td>
-							  </tr>
+							<table style="width:100%;text-align:center;margin-top:20px;" border="1" id="invoice_detail">
 							</table>
 						</div>
 						<div style="height:60px;margin-top:20px;">
 							<div style="width:50%;float:left;">
-								<p>发票代码:&emsp;4000701222</p>
-								<p>发票号码:&emsp;3680997</p>
+								<p id="fpdm"></p>
+								<p id="fphm"></p>
 							</div>
-							<div style="width:50%;float:right;text-align:right;">
-								<p>开票日期:&emsp;2018年06月14日</p>
-								<p>上传时间:&emsp;2018年06月14日</p>
+							<div style="width:50%;float:left;text-align:right;">
+								<p id="kprq"></p>
+								<p id="create_time"></p>
 							</div>
 						</div>
 					</div>
@@ -333,8 +313,57 @@
             }
 		});
 		$.datetimepicker.setLocale('ch');
-		
-		function opendlg(){
+		function displayEmptyContent(){
+			$("#buy_name").html("购买方名称:&emsp;&emsp;");
+			$("#buy_code").html("纳税人识别号:&emsp;");
+			$("#buy_address").html("地址电话:&emsp;&emsp;&emsp;");
+			$("#buy_bank").html("开户行及账号:&emsp;");
+			$("#supply_name").html("销售方名称:&emsp;&emsp;");
+			$("#supply_code").html("纳税人识别号:&emsp;");
+			$("#supply_address").html("地址电话:&emsp;&emsp;&emsp;");
+			$("#supply_bank").html("开户行及账号:&emsp;");
+			$("#fpdm").html("发票代码:&emsp;");
+			$("#fphm").html("发票号码:&emsp;");
+			$("#kprq").html("开票日期:&emsp;");
+			$("#create_time").html("上传时间:&emsp;");
+			$("#invoice_detail").html("");
+		}
+		function displayInvoiceDetailContent(data){
+			var invoiceInfo = data.invoice_info;
+			var invoiceItemInfo = data.invoice_item_info;
+			$("#buy_name").html("购买方名称:&emsp;&emsp;"+invoiceInfo.buy_name);
+			$("#buy_code").html("纳税人识别号:&emsp;"+invoiceInfo.buy_identify_code);
+			$("#buy_address").html("地址电话:&emsp;&emsp;&emsp;"+invoiceInfo.buy_address);
+			$("#buy_bank").html("开户行及账号:&emsp;"+invoiceInfo.buy_deposit_bank);
+			$("#supply_name").html("销售方名称:&emsp;&emsp;"+invoiceInfo.supply_name);
+			$("#supply_code").html("纳税人识别号:&emsp;"+invoiceInfo.supply_identify_code);
+			$("#supply_address").html("地址电话:&emsp;&emsp;&emsp;"+invoiceInfo.supply_address);
+			$("#supply_bank").html("开户行及账号:&emsp;"+invoiceInfo.supply_deposit_bank);
+			$("#fpdm").html("发票代码:&emsp;"+invoiceInfo.fpdm);
+			$("#fphm").html("发票号码:&emsp;"+invoiceInfo.fphm);
+			$("#kprq").html("开票日期:&emsp;"+invoiceInfo.kprq + " 00:00:00");
+			$("#create_time").html("上传时间:&emsp;"+invoiceInfo.create_time_readable);
+			var itemString = "<tr><th>货物或应税劳务、服务名称</th><th>规格型号</th><th>单位</th><th>数量</th><th>单价</th><th>金额</th><th>税率</th><th>税额</th></tr>";
+			for(var index in invoiceItemInfo){
+				itemString = itemString + "<tr><td>"+invoiceItemInfo[index].abstract_info+"</td><td>"+invoiceItemInfo[index].model+"</td><td>"+invoiceItemInfo[index].unit+"</td><td>"+invoiceItemInfo[index].count+"</td><td>"+invoiceItemInfo[index].unit_price+"</td><td>"+invoiceItemInfo[index].amount+"</td><td>"+invoiceItemInfo[index].tax_rate+"%</td><td>"+invoiceItemInfo[index].tax+"</td></tr>";
+			}
+			$("#invoice_detail").html(itemString);
+		}
+		function opendlg(invoiceId, status){
+			if(status != 1){
+				$("#confirm_dlg_cancel").hide();
+				$("#confirm_dlg_confirm").hide();
+				var width = document.documentElement.clientWidth;
+				var height = document.documentElement.clientHeight;
+				document.getElementById("confirm_dlg").style.width = "600px";
+				document.getElementById("confirm_dlg").style.height = (height * 2 / 3) + "px";
+				document.getElementById("confirm_dlg").style.top = (height/2 - (height/3)) + "px";
+				document.getElementById("confirm_dlg").style.left = (width/2 - 300) + "px";
+				document.getElementById("dlg_mask").style.display = "";
+				document.getElementById("confirm_dlg").style.display = "";
+				$("#dlg_tip").html("当前发票正在识别或识别失败，无法查看详细信息！");
+				return;
+			}
 			var width = document.documentElement.clientWidth;
 			var height = document.documentElement.clientHeight;
 			document.getElementById("item_detail").style.width = "600px";
@@ -344,11 +373,24 @@
 			document.getElementById("detail_h").style.maxHeight = (height *2 / 3 -80) + "px";
 			document.getElementById("dlg_mask").style.display = "";
 			document.getElementById("item_detail").style.display = "";
+			displayEmptyContent();
+			$.ajax({
+				url: '/admin/getInvoiceDetailByIdForWeb',
+				type: "POST",
+				data: {
+					invoice_id:invoiceId
+				},
+				success: function(data) {
+					displayInvoiceDetailContent(data);
+				}
+			});
 		}
 		function closedlg(){
 			document.getElementById("dlg_mask").style.display = "none";
 			document.getElementById("item_detail").style.display = "none";
 			document.getElementById("confirm_dlg").style.display = "none";
+			$("#confirm_dlg_cancel").show();
+			$("#confirm_dlg_confirm").show();
 			$("#dlg_tip").html("");
 		}
 		function closedlgForBtn(){
@@ -408,7 +450,7 @@
 		}
 		function openConfirmDlg(){
 			var width = document.documentElement.clientWidth;
-			var height = document.documentElement.clientHeight;
+			var height = document.documentElement.clientHeight;rr
 			document.getElementById("confirm_dlg").style.width = "600px";
 			document.getElementById("confirm_dlg").style.height = (height * 2 / 3) + "px";
 			document.getElementById("confirm_dlg").style.top = (height/2 - (height/3)) + "px";
@@ -436,7 +478,7 @@
 					} else {
 						$("#noresult").hide();
 						for(var index in data.data){
-							listString = listString + "<tr><td class='table_cell user'><div class='user_info'><label invoice_id='"+data.data[index].id+"' for='checkoSTV_t5y7_cldzQr0gjIAQn7d-aA'class='frm_checkbox_label'><i class='icon_checkbox'></i><input style='display:none;' class='frm_checkbox js_select' type='checkbox' value='oSTV_t5y7_cldzQr0gjIAQn7d-aA' id='checkoSTV_t5y7_cldzQr0gjIAQn7d-aA'></label><a href='javascript:opendlg();'><span class='remark_name'>供应方名称:"+data.data[index].supply_name+"</span><span class='avatar'><img src='/img/invoice01.jpg' data-id='oSTV_t4DEXmGjf7lJbFQ2xfMDDZQ' class='js_msgSenderAvatar'></span><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list'>合计金额:&emsp;"+data.data[index].amount+"元</span></div><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list'>合计税额:&emsp;"+data.data[index].tax+"元</span></div><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list' style='width:50%;float:left;'>开票日期:&emsp;"+data.data[index].kprq.substring(0,4)+"年"+data.data[index].kprq.substring(4,2)+"月"+data.data[index].kprq.substring(6,2)+"日</span><span class='js_tags_list user_tag_list' style='width:50%;float:right;color:#"+(data.data[index].rec_status==0?"7d7dff":(data.data[index].rec_status==1?"2f9833":"ff5809"))+";'>识别状态:&emsp;"+(data.data[index].rec_status==0?"正在识别":(data.data[index].rec_status==1?"识别成功":"识别失败"))+"</span></div></a></div></td><td class='table_cell user_opr tr' style='text-align:right;'><a href='javascript:deleteInvoiceForSingle("+data.data[index].id+");' class='btn remark js_msgSenderRemark' data-fakeid='oSTV_t9-tNksUT_78czxDstmXXNc'>删除</a></td></tr>";
+							listString = listString + "<tr><td class='table_cell user'><div class='user_info'><label invoice_id='"+data.data[index].id+"' for='checkoSTV_t5y7_cldzQr0gjIAQn7d-aA'class='frm_checkbox_label'><i class='icon_checkbox'></i><input style='display:none;' class='frm_checkbox js_select' type='checkbox' value='oSTV_t5y7_cldzQr0gjIAQn7d-aA' id='checkoSTV_t5y7_cldzQr0gjIAQn7d-aA'></label><a href='javascript:opendlg("+data.data[index].id+","+data.data[index].rec_status+");'><span class='remark_name'>供应方名称:"+data.data[index].supply_name+"</span><span class='avatar'><img src='/img/invoice01.jpg' data-id='oSTV_t4DEXmGjf7lJbFQ2xfMDDZQ' class='js_msgSenderAvatar'></span><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list'>合计金额:&emsp;"+data.data[index].amount+"元</span></div><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list'>合计税额:&emsp;"+data.data[index].tax+"元</span></div><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list' style='width:50%;float:left;'>开票日期:&emsp;"+data.data[index].kprq.substring(0,4)+"年"+data.data[index].kprq.substring(4,2)+"月"+data.data[index].kprq.substring(6,2)+"日</span><span class='js_tags_list user_tag_list' style='width:50%;float:right;color:#"+(data.data[index].rec_status==0?"7d7dff":(data.data[index].rec_status==1?"2f9833":"ff5809"))+";'>识别状态:&emsp;"+(data.data[index].rec_status==0?"正在识别":(data.data[index].rec_status==1?"识别成功":"识别失败"))+"</span></div></a></div></td><td class='table_cell user_opr tr' style='text-align:right;'><a href='javascript:deleteInvoiceForSingle("+data.data[index].id+");' class='btn remark js_msgSenderRemark' data-fakeid='oSTV_t9-tNksUT_78czxDstmXXNc'>删除</a></td></tr>";
 						}
 						$("#invoice_list").html(listString);
 						$("#current_page").html(1);
@@ -484,7 +526,7 @@
 					if(data.total == 0) {
 					} else {
 						for(var index in data.data){
-							listString = listString + "<tr><td class='table_cell user'><div class='user_info'><label invoice_id='"+data.data[index].id+"' for='checkoSTV_t5y7_cldzQr0gjIAQn7d-aA'class='frm_checkbox_label'><i class='icon_checkbox'></i><input style='display:none;'  class='frm_checkbox js_select' type='checkbox' value='oSTV_t5y7_cldzQr0gjIAQn7d-aA' id='checkoSTV_t5y7_cldzQr0gjIAQn7d-aA'></label><a href='javascript:opendlg();'><span class='remark_name'>供应方名称:"+data.data[index].supply_name+"</span><span class='avatar'><img src='/img/invoice01.jpg' data-id='oSTV_t4DEXmGjf7lJbFQ2xfMDDZQ' class='js_msgSenderAvatar'></span><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list'>合计金额:&emsp;"+data.data[index].amount+"元</span></div><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list'>合计税额:&emsp;"+data.data[index].tax+"元</span></div><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list' style='width:50%;float:left;'>开票日期:&emsp;"+data.data[index].kprq.substring(0,4)+"年"+data.data[index].kprq.substring(4,2)+"月"+data.data[index].kprq.substring(6,2)+"日</span><span class='js_tags_list user_tag_list' style='width:50%;float:right;color:#"+(data.data[index].rec_status==0?"7d7dff":(data.data[index].rec_status==1?"2f9833":"ff5809"))+";'>识别状态:&emsp;"+(data.data[index].rec_status==0?"正在识别":(data.data[index].rec_status==1?"识别成功":"识别失败"))+"</span></div></a></div></td><td class='table_cell user_opr tr' style='text-align:right;'><a href='javascript:deleteInvoiceForSingle("+data.data[index].id+");' class='btn remark js_msgSenderRemark' data-fakeid='oSTV_t9-tNksUT_78czxDstmXXNc'>删除</a></td></tr>";
+							listString = listString + "<tr><td class='table_cell user'><div class='user_info'><label invoice_id='"+data.data[index].id+"' for='checkoSTV_t5y7_cldzQr0gjIAQn7d-aA'class='frm_checkbox_label'><i class='icon_checkbox'></i><input style='display:none;'  class='frm_checkbox js_select' type='checkbox' value='oSTV_t5y7_cldzQr0gjIAQn7d-aA' id='checkoSTV_t5y7_cldzQr0gjIAQn7d-aA'></label><a href='javascript:opendlg("+data.data[index].id+","+data.data[index].rec_status+");'><span class='remark_name'>供应方名称:"+data.data[index].supply_name+"</span><span class='avatar'><img src='/img/invoice01.jpg' data-id='oSTV_t4DEXmGjf7lJbFQ2xfMDDZQ' class='js_msgSenderAvatar'></span><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list'>合计金额:&emsp;"+data.data[index].amount+"元</span></div><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list'>合计税额:&emsp;"+data.data[index].tax+"元</span></div><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list' style='width:50%;float:left;'>开票日期:&emsp;"+data.data[index].kprq.substring(0,4)+"年"+data.data[index].kprq.substring(4,2)+"月"+data.data[index].kprq.substring(6,2)+"日</span><span class='js_tags_list user_tag_list' style='width:50%;float:right;color:#"+(data.data[index].rec_status==0?"7d7dff":(data.data[index].rec_status==1?"2f9833":"ff5809"))+";'>识别状态:&emsp;"+(data.data[index].rec_status==0?"正在识别":(data.data[index].rec_status==1?"识别成功":"识别失败"))+"</span></div></a></div></td><td class='table_cell user_opr tr' style='text-align:right;'><a href='javascript:deleteInvoiceForSingle("+data.data[index].id+");' class='btn remark js_msgSenderRemark' data-fakeid='oSTV_t9-tNksUT_78czxDstmXXNc'>删除</a></td></tr>";
 						}
 						$("#invoice_list").html(listString);
 						$("#current_page").html(current_page);
@@ -512,7 +554,7 @@
 					if(data.total == 0) {
 					} else {
 						for(var index in data.data){
-							listString = listString + "<tr><td class='table_cell user'><div class='user_info'><label invoice_id='"+data.data[index].id+"' for='checkoSTV_t5y7_cldzQr0gjIAQn7d-aA'class='frm_checkbox_label'><i class='icon_checkbox'></i><input style='display:none;'  class='frm_checkbox js_select' type='checkbox' value='oSTV_t5y7_cldzQr0gjIAQn7d-aA' id='checkoSTV_t5y7_cldzQr0gjIAQn7d-aA'></label><a href='javascript:opendlg();'><span class='remark_name'>供应方名称:"+data.data[index].supply_name+"</span><span class='avatar'><img src='/img/invoice01.jpg' data-id='oSTV_t4DEXmGjf7lJbFQ2xfMDDZQ' class='js_msgSenderAvatar'></span><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list'>合计金额:&emsp;"+data.data[index].amount+"元</span></div><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list'>合计税额:&emsp;"+data.data[index].tax+"元</span></div><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list' style='width:50%;float:left;'>开票日期:&emsp;"+data.data[index].kprq.substring(0,4)+"年"+data.data[index].kprq.substring(4,2)+"月"+data.data[index].kprq.substring(6,2)+"日</span><span class='js_tags_list user_tag_list' style='width:50%;float:right;color:#"+(data.data[index].rec_status==0?"7d7dff":(data.data[index].rec_status==1?"2f9833":"ff5809"))+";'>识别状态:&emsp;"+(data.data[index].rec_status==0?"正在识别":(data.data[index].rec_status==1?"识别成功":"识别失败"))+"</span></div></a></div></td><td class='table_cell user_opr tr' style='text-align:right;'><a href='javascript:deleteInvoiceForSingle("+data.data[index].id+");' class='btn remark js_msgSenderRemark' data-fakeid='oSTV_t9-tNksUT_78czxDstmXXNc'>删除</a></td></tr>";
+							listString = listString + "<tr><td class='table_cell user'><div class='user_info'><label invoice_id='"+data.data[index].id+"' for='checkoSTV_t5y7_cldzQr0gjIAQn7d-aA'class='frm_checkbox_label'><i class='icon_checkbox'></i><input style='display:none;'  class='frm_checkbox js_select' type='checkbox' value='oSTV_t5y7_cldzQr0gjIAQn7d-aA' id='checkoSTV_t5y7_cldzQr0gjIAQn7d-aA'></label><a href='javascript:opendlg("+data.data[index].id+","+data.data[index].rec_status+");'><span class='remark_name'>供应方名称:"+data.data[index].supply_name+"</span><span class='avatar'><img src='/img/invoice01.jpg' data-id='oSTV_t4DEXmGjf7lJbFQ2xfMDDZQ' class='js_msgSenderAvatar'></span><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list'>合计金额:&emsp;"+data.data[index].amount+"元</span></div><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list'>合计税额:&emsp;"+data.data[index].tax+"元</span></div><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list' style='width:50%;float:left;'>开票日期:&emsp;"+data.data[index].kprq.substring(0,4)+"年"+data.data[index].kprq.substring(4,2)+"月"+data.data[index].kprq.substring(6,2)+"日</span><span class='js_tags_list user_tag_list' style='width:50%;float:right;color:#"+(data.data[index].rec_status==0?"7d7dff":(data.data[index].rec_status==1?"2f9833":"ff5809"))+";'>识别状态:&emsp;"+(data.data[index].rec_status==0?"正在识别":(data.data[index].rec_status==1?"识别成功":"识别失败"))+"</span></div></a></div></td><td class='table_cell user_opr tr' style='text-align:right;'><a href='javascript:deleteInvoiceForSingle("+data.data[index].id+");' class='btn remark js_msgSenderRemark' data-fakeid='oSTV_t9-tNksUT_78czxDstmXXNc'>删除</a></td></tr>";
 						}
 						$("#invoice_list").html(listString);
 						$("#current_page").html(current_page);
@@ -540,7 +582,7 @@
 					if(data.total == 0) {
 					} else {
 						for(var index in data.data){
-							listString = listString + "<tr><td class='table_cell user'><div class='user_info'><label invoice_id='"+data.data[index].id+"' for='checkoSTV_t5y7_cldzQr0gjIAQn7d-aA'class='frm_checkbox_label'><i class='icon_checkbox'></i><input style='display:none;'  class='frm_checkbox js_select' type='checkbox' value='oSTV_t5y7_cldzQr0gjIAQn7d-aA' id='checkoSTV_t5y7_cldzQr0gjIAQn7d-aA'></label><a href='javascript:opendlg();'><span class='remark_name'>供应方名称:"+data.data[index].supply_name+"</span><span class='avatar'><img src='/img/invoice01.jpg' data-id='oSTV_t4DEXmGjf7lJbFQ2xfMDDZQ' class='js_msgSenderAvatar'></span><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list'>合计金额:&emsp;"+data.data[index].amount+"元</span></div><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list'>合计税额:&emsp;"+data.data[index].tax+"元</span></div><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list' style='width:50%;float:left;'>开票日期:&emsp;"+data.data[index].kprq.substring(0,4)+"年"+data.data[index].kprq.substring(4,2)+"月"+data.data[index].kprq.substring(6,2)+"日</span><span class='js_tags_list user_tag_list' style='width:50%;float:right;color:#"+(data.data[index].rec_status==0?"7d7dff":(data.data[index].rec_status==1?"2f9833":"ff5809"))+";'>识别状态:&emsp;"+(data.data[index].rec_status==0?"正在识别":(data.data[index].rec_status==1?"识别成功":"识别失败"))+"</span></div></a></div></td><td class='table_cell user_opr tr' style='text-align:right;'><a href='javascript:deleteInvoiceForSingle("+data.data[index].id+");' class='btn remark js_msgSenderRemark' data-fakeid='oSTV_t9-tNksUT_78czxDstmXXNc'>删除</a></td></tr>";
+							listString = listString + "<tr><td class='table_cell user'><div class='user_info'><label invoice_id='"+data.data[index].id+"' for='checkoSTV_t5y7_cldzQr0gjIAQn7d-aA'class='frm_checkbox_label'><i class='icon_checkbox'></i><input style='display:none;'  class='frm_checkbox js_select' type='checkbox' value='oSTV_t5y7_cldzQr0gjIAQn7d-aA' id='checkoSTV_t5y7_cldzQr0gjIAQn7d-aA'></label><a href='javascript:opendlg("+data.data[index].id+","+data.data[index].rec_status+");'><span class='remark_name'>供应方名称:"+data.data[index].supply_name+"</span><span class='avatar'><img src='/img/invoice01.jpg' data-id='oSTV_t4DEXmGjf7lJbFQ2xfMDDZQ' class='js_msgSenderAvatar'></span><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list'>合计金额:&emsp;"+data.data[index].amount+"元</span></div><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list'>合计税额:&emsp;"+data.data[index].tax+"元</span></div><div class='js_tags user_tag_area'><span class='js_tags_list user_tag_list' style='width:50%;float:left;'>开票日期:&emsp;"+data.data[index].kprq.substring(0,4)+"年"+data.data[index].kprq.substring(4,2)+"月"+data.data[index].kprq.substring(6,2)+"日</span><span class='js_tags_list user_tag_list' style='width:50%;float:right;color:#"+(data.data[index].rec_status==0?"7d7dff":(data.data[index].rec_status==1?"2f9833":"ff5809"))+";'>识别状态:&emsp;"+(data.data[index].rec_status==0?"正在识别":(data.data[index].rec_status==1?"识别成功":"识别失败"))+"</span></div></a></div></td><td class='table_cell user_opr tr' style='text-align:right;'><a href='javascript:deleteInvoiceForSingle("+data.data[index].id+");' class='btn remark js_msgSenderRemark' data-fakeid='oSTV_t9-tNksUT_78czxDstmXXNc'>删除</a></td></tr>";
 						}
 						$("#invoice_list").html(listString);
 						$("#current_page").html(current_page);
