@@ -1,7 +1,12 @@
 package com.bbz.service.web.impl;
 
 import java.io.FileOutputStream;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +42,7 @@ public class GenVoucherServiceImpl implements IGenVoucherService {
 		Map<Integer, Object> invoiceOutputToExcelMap = new HashMap<>();
 		String sqlVoucher = "select * from voucher where user_id=? and bill_date=?";
 		String sqlFaDepreciation = "select * from fa_depreciation where user_id=? and bill_date=? and net_value>0";
-		String sqlInvoice = "select * from invoice left join invoice_item on invoice_item.invoice_id=invoice.id where invoice.user_id=? and invoice.bill_date=?";
+		String sqlInvoice = "select * from invoice left join invoice_item on invoice_item.invoice_id=invoice.id where invoice.user_id=? and invoice.bill_date=? and rec_status=1";
 		String sqlvoucherNumMax = "select max(voucher_num) max_voucher_num from voucher where bill_date=?";
 		int voucherNumMax = 0;
 		try{
@@ -49,7 +54,13 @@ public class GenVoucherServiceImpl implements IGenVoucherService {
 			//由invoice和invoice_item的级联结果进行合并摘要，生成invoiceOutputToExcelMap
 			//key是invoice的ID,value是对应票据的详细信息，多个摘要会合并成一个摘要，因此
 			//invoiceDataList中隶属于同一张票据的摘要会最终合并成一条记录
+			int count = 0;
 			for(Map<String, Object> invoiceDataMap : invoiceDataList){
+				count++;
+				System.out.println(count);
+				if(count == 13) {
+					System.out.println("error");
+				}
 				if(!invoiceOutputToExcelMap.containsKey((Integer)invoiceDataMap.get("id"))) {
 					invoiceOutputToExcelMap.put((Integer)invoiceDataMap.get("id"), new HashMap<String, Object>());
 					Map<String, Object> map = (Map<String, Object>)invoiceOutputToExcelMap.get((Integer)invoiceDataMap.get("id"));
@@ -67,7 +78,9 @@ public class GenVoucherServiceImpl implements IGenVoucherService {
 					map.put("is_fa", (Integer)invoiceDataMap.get("is_fa") == 0 ? "否":"是");
 					map.put("supply_name", (String)invoiceDataMap.get("supply_name"));
 					map.put("invoice_inout_type", (Integer)invoiceDataMap.get("invoice_inout_type") == 0 ? "进项票":"销项票");
-					map.put("create_time", (String)invoiceDataMap.get("create_time"));
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					String time = sdf.format((Timestamp)invoiceDataMap.get("create_time"));
+					map.put("create_time", time);
 				} else {
 					if(invoiceDataMap.get("abstract_info") != null &&
 							!((String)invoiceDataMap.get("abstract_info")).isEmpty()) {
@@ -91,17 +104,17 @@ public class GenVoucherServiceImpl implements IGenVoucherService {
 				HSSFCell cell = row.createCell(entry.getKey());
 				cell.setCellType(HSSFCell.CELL_TYPE_STRING);
 				cell.setCellValue(entry.getValue());
-				invoiceSheet.setColumnWidth(entry.getKey(), entry.getValue().getBytes().length*256);
+				//invoiceSheet.setColumnWidth(entry.getKey(), entry.getValue().getBytes().length*256);
 			}
 			int rowIndex = 1;
 			for(Entry<Integer, Object> invoiceEntry : invoiceOutputToExcelMap.entrySet()){
 				row = invoiceSheet.createRow(rowIndex);
-				for(int colIndex = 0; colIndex<((Map<String, String>)invoiceEntry).size(); colIndex++){
+				for(int colIndex = 0; colIndex<((Map<String, String>)invoiceEntry.getValue()).size(); colIndex++){
 					HSSFCell cell = row.createCell(colIndex);
 					cell.setCellType(HSSFCell.CELL_TYPE_STRING);
 					String colValue = ((Map<String, String>)invoiceEntry.getValue()).get(ExcelTitleUtil.invoiceExcelDataMap.get(colIndex));
 					cell.setCellValue(colValue);
-					invoiceSheet.setColumnWidth(colIndex, colValue.getBytes().length*256);
+					//invoiceSheet.setColumnWidth(colIndex, colValue.getBytes().length*256);
 				}
 				rowIndex++;
 			}
@@ -133,6 +146,10 @@ public class GenVoucherServiceImpl implements IGenVoucherService {
 				rowIndex++;
 			}
 			for(Map<String, Object> faDepreciationEntry : faDepreciationDataList){
+				int cumulative_amortization_months = (Integer)faDepreciationEntry.get("cumulative_amortization_months");
+				int curMonths = getMonths(billDate);
+				if(curMonths == 0) continue;
+				if(curMonths > cumulative_amortization_months) continue;
 				row = voucherSheet.createRow(rowIndex);
 				Map<String, String> infoMap = new HashMap<>();
 				String[] billDateInfos = billDate.split("-");
@@ -193,5 +210,18 @@ public class GenVoucherServiceImpl implements IGenVoucherService {
 			retMap.put("error_msg", "获取凭证失败。");
 		}
 		return retMap;
+	}
+	
+	private int getMonths(String billDate){
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+		Calendar cal1 = Calendar.getInstance();
+		Calendar cal2 = Calendar.getInstance();
+		try {
+			cal1.setTime(sdf.parse(billDate));
+			return ((cal2.get(1)-cal1.get(1))*12+(cal2.get(2)-cal1.get(2)));
+		} catch (ParseException e) {
+			logger.error(e.toString());
+			return 0;
+		}
 	}
 }

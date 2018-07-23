@@ -69,9 +69,8 @@
 	<mvc:resources mapping="/js/**" location="/WEB-INF/js/"/>
 	<mvc:resources mapping="/img/**" location="/WEB-INF/img/"/>
 	<mvc:resources mapping="/css/**" location="/WEB-INF/css/"/>
-	<mvc:resources mapping="/fonts/**" location="/WEB-INF/fonts/"/>
+	<mvc:resources mapping="/locales/**" location="/WEB-INF/locales/"/>
 	<mvc:resources mapping="/views/**" location="/WEB-INF/views/"/>
-	<mvc:resources mapping="/plugins/**" location="/WEB-INF/plugins/"/>
 	<mvc:resources mapping="/.well-known/pki-validation/**" location="/WEB-INF/sslauth/"/>
 	<!-- static resources config end -->	
 
@@ -81,7 +80,7 @@
 		<property name="driverClassName" value="com.mysql.jdbc.Driver">
 		</property>
 		<property name="url"
-			value="jdbc:mysql://139.196.40.99:3306/wechat_invoice_rec?useUnicode=true&amp;characterEncoding=UTF-8"></property>
+			value="jdbc:mysql://120.132.27.211:3306/wechat_invoice_rec?useUnicode=true&amp;characterEncoding=UTF-8"></property>
 		<property name="username" value="root"></property>
 		<property name="password" value="Cckzcbm110"></property>
 		<property name="maxIdle" value="30"></property>
